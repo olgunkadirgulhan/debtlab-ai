@@ -1,11 +1,13 @@
 name: shorts
 on:
   schedule:
-    # 3 videos/day at US viewing times (EDT): slots 13:00, 17:00, 22:00 UTC (09/13/18 ET).
-    # GitHub delays or drops cron runs, so this fires hourly (off the busy :00 mark) and
+    # 3 videos/day at US viewing times (EDT): slots 16:00, 20:00, 22:00 UTC (12/16/18 ET).
+    # Afternoon/evening ET got the most views on 09-22..26; the last slot stays before 23:00 UTC
+    # so it gets two tries before the UTC day (and the daily count) rolls over.
+    # Fired hourly by cron-job.org (auto=true) with this cron as a backup;
     # .github/slot_guard.py makes a video only when a slot is due and not yet uploaded.
     # MAX_PER_DAY in run.py stays the hard cap.
-    - cron: "23 13-23 * * *"
+    - cron: "23 16-23 * * *"
   workflow_dispatch:
     inputs:
       auto:
@@ -31,7 +33,7 @@ jobs:
       - id: g
         env:
           LOG_FILE: youtube/published.csv
-          SLOTS: "13:00,17:00,22:00"
+          SLOTS: "16:00,20:00,22:00"
         run: python3 .github/slot_guard.py
 
   make-and-upload:
