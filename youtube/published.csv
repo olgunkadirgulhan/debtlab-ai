@@ -22,3 +22,4 @@ topic_id,date_utc,video_id,privacy,pillar,title,script_source
 21,2026-09-30 20:27,vBDHmJcOkOg,public,min_trap,"Paying only the minimum on $24,250 takes HOW long?",gemini
 22,2026-09-30 22:27,ypHyEGNpxQ0,public,extra_payment,"How $400 extra per month kills $34,250 of debt faster",gemini
 23,2026-10-01 16:27,JqKrOiAEtdA,public,snowball_vs_avalanche,"Smallest balance first or highest APR first? $42,700 test",gemini
+24,2026-10-01 20:29,9fe1IVbGuM4,public,utilization,"How much to pay to get under 30% utilization on a $12,000 card",gemini
