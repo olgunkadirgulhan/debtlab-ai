@@ -135,9 +135,117 @@ def _utilization(p):
     }
 
 
+def _apr_gap(p):
+    hi, lo = dm.payoff(p["balance"], p["apr_high"], p["payment"]), dm.payoff(p["balance"], p["apr_low"], p["payment"])
+    diff = round(hi["total_interest"]) - round(lo["total_interest"])
+    facts = {
+        "balance": money(p["balance"]),
+        "monthly_payment": money(p["payment"]),
+        "high_apr": f"{p['apr_high']}%",
+        "low_apr": f"{p['apr_low']}%",
+        "time_at_high_apr": years_months(hi["months"]),
+        "interest_at_high_apr": money(hi["total_interest"]),
+        "time_at_low_apr": years_months(lo["months"]),
+        "interest_at_low_apr": money(lo["total_interest"]),
+        "interest_difference": money(diff),
+        "time_difference": years_months(hi["months"] - lo["months"]),
+    }
+    return {
+        "facts": facts,
+        "hook": {"big": money(diff), "small": f"the APR gap costs on {money(p['balance'])}"},
+        "chart": {
+            "type": "lines",
+            "series": [
+                {"label": f"{p['apr_high']}% APR", "data": hi["history"], "color": "red"},
+                {"label": f"{p['apr_low']}% APR", "data": lo["history"], "color": "green"},
+            ],
+            "x_unit": "months",
+        },
+        "stats": [("Extra interest", money(diff)), ("Extra time", years_months(hi["months"] - lo["months"]))],
+    }
+
+
+def promo_payoff(balance, apr, payment, promo_months, fee_pct):
+    """Balance transfer: fee added up front, 0% for promo_months, then the regular APR."""
+    bal = balance * (1 + fee_pct / 100)
+    history, months, interest = [round(bal, 2)], 0, 0.0
+    r = apr / 100 / 12
+    while bal > 0.005 and months < dm.MAX_MONTHS:
+        i = bal * r if months >= promo_months else 0.0
+        if payment <= i:
+            return None
+        interest += i
+        bal = max(0.0, bal + i - payment)
+        months += 1
+        history.append(round(bal, 2))
+    return {"months": months, "total_interest": round(interest, 2), "fee": round(balance * fee_pct / 100, 2), "history": history}
+
+
+def _balance_transfer(p):
+    stay = dm.payoff(p["balance"], p["apr"], p["payment"])
+    bt = promo_payoff(p["balance"], p["apr"], p["payment"], p["promo_months"], p["fee_pct"])
+    cost_bt = round(bt["total_interest"]) + round(bt["fee"])
+    saved = round(stay["total_interest"]) - cost_bt
+    facts = {
+        "balance": money(p["balance"]),
+        "apr": f"{p['apr']}%",
+        "monthly_payment": money(p["payment"]),
+        "intro_offer": f"0% for {p['promo_months']} months with a {p['fee_pct']}% transfer fee",
+        "transfer_fee": money(bt["fee"]),
+        "interest_if_you_stay": money(stay["total_interest"]),
+        "time_if_you_stay": years_months(stay["months"]),
+        "interest_plus_fee_with_transfer": money(cost_bt),
+        "time_with_transfer": years_months(bt["months"]),
+        "difference": money(saved),
+        "assumptions": "you qualify for the offer, make no new charges and the rate after the promo is the same APR",
+    }
+    return {
+        "facts": facts,
+        "hook": {"big": money(saved), "small": f"difference with a 0% transfer on {money(p['balance'])}"},
+        "chart": {
+            "type": "lines",
+            "series": [
+                {"label": f"Stay at {p['apr']}%", "data": stay["history"], "color": "red"},
+                {"label": f"0% for {p['promo_months']} mo", "data": bt["history"], "color": "green"},
+            ],
+            "x_unit": "months",
+        },
+        "stats": [("Fee", money(bt["fee"])), ("Difference", money(saved))],
+    }
+
+
+def _payment_ladder(p):
+    pays = p["payments"]
+    rs = [dm.payoff(p["balance"], p["apr"], x) for x in pays]
+    facts = {
+        "balance": money(p["balance"]),
+        "apr": f"{p['apr']}%",
+        "payments_compared": [f"{money(x)} a month: {years_months(r['months'])}, {money(r['total_interest'])} interest"
+                              for x, r in zip(pays, rs)],
+        "slowest_time": years_months(rs[0]["months"]),
+        "fastest_time": years_months(rs[-1]["months"]),
+        "interest_difference_slowest_vs_fastest": money(round(rs[0]["total_interest"]) - round(rs[-1]["total_interest"])),
+    }
+    return {
+        "facts": facts,
+        "hook": {"big": years_months(rs[-1]["months"]).split(" and ")[0].upper(),
+                 "small": f"vs {years_months(rs[0]['months'])} on {money(p['balance'])}"},
+        "chart": {
+            "type": "lines",
+            "series": [{"label": f"{money(x)}/mo", "data": r["history"], "color": c}
+                       for x, r, c in zip(pays, rs, ("red", "yellow", "green"))],
+            "x_unit": "months",
+        },
+        "stats": [("Slowest", years_months(rs[0]["months"])), ("Fastest", years_months(rs[-1]["months"]))],
+    }
+
+
 BUILDERS = {
     "min_trap": _min_trap,
     "extra_payment": _extra_payment,
     "snowball_vs_avalanche": _snowball,
     "utilization": _utilization,
+    "apr_gap": _apr_gap,
+    "balance_transfer": _balance_transfer,
+    "payment_ladder": _payment_ladder,
 }

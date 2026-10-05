@@ -16,12 +16,18 @@ TAGS = {
     "extra_payment": ["pay off debt faster", "extra payment", "credit card debt", "debt payoff"],
     "snowball_vs_avalanche": ["debt snowball", "debt avalanche", "snowball vs avalanche", "debt payoff plan"],
     "utilization": ["credit utilization", "credit score", "raise credit score", "credit card tips"],
+    "apr_gap": ["credit card APR", "lower interest rate", "credit card interest", "debt payoff"],
+    "balance_transfer": ["balance transfer", "0% APR", "credit card debt", "debt payoff"],
+    "payment_ladder": ["debt payoff calculator", "monthly payment", "credit card debt", "pay off debt faster"],
 }
 HASHTAGS = {
     "min_trap": "#creditcarddebt #debtfree",
     "extra_payment": "#debtfree #payoffdebt",
     "snowball_vs_avalanche": "#debtsnowball #debtfree",
     "utilization": "#creditscore #creditcards",
+    "apr_gap": "#creditcarddebt #apr",
+    "balance_transfer": "#balancetransfer #debtfree",
+    "payment_ladder": "#debtfree #payoffdebt",
 }
 
 

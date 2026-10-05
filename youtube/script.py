@@ -144,6 +144,38 @@ def fallback(topic, f, cta):
             f"{verdict}. "
             f"Tip: if quick wins keep you motivated, snowball could still be the better fit for you. "
         )
+    elif p == "apr_gap":
+        body = (
+            f"Same debt, different APR, and the gap could cost you {f['interest_difference']}. "
+            f"You owe {f['balance']} and pay {f['monthly_payment']} a month. "
+            f"At {f['high_apr']} APR it takes {f['time_at_high_apr']} and {f['interest_at_high_apr']} in interest. "
+            f"At {f['low_apr']} APR it takes {f['time_at_low_apr']} and {f['interest_at_low_apr']} in interest. "
+            f"That's {f['time_difference']} longer at the higher rate. "
+            f"Same balance, same payment. The only thing that changed is the rate. "
+            f"Tip: call your card issuer and ask for a lower rate. It's a short call, and some people get a yes. "
+            f"If they say no, a lower rate card or a consolidation loan could be worth comparing. "
+        )
+    elif p == "balance_transfer":
+        body = (
+            f"Could a zero percent balance transfer really help? Let's run it on {f['balance']}. "
+            f"Stay at {f['apr']} APR paying {f['monthly_payment']} a month: {f['time_if_you_stay']} and {f['interest_if_you_stay']} in interest. "
+            f"Now take an offer of {f['intro_offer']}. The fee is {f['transfer_fee']}. "
+            f"Interest plus fee comes to {f['interest_plus_fee_with_transfer']}, and you're done in {f['time_with_transfer']}. "
+            f"That's a {f['difference']} difference. "
+            f"This assumes you qualify and make no new charges on the card. "
+            f"The key is to keep paying the same amount during the zero percent months, "
+            f"so the promo goes to the balance and not to new spending. "
+        )
+    elif p == "payment_ladder":
+        lines = " ".join(x + "." for x in f["payments_compared"])
+        body = (
+            f"How much should you pay each month on {f['balance']} at {f['apr']} APR? Here are three options. "
+            f"{lines} "
+            f"Going from the smallest to the biggest payment could save {f['interest_difference_slowest_vs_fastest']} in interest. "
+            f"Notice how the first jump in payment saves the most time. "
+            f"Tip: pick the highest payment you can keep every month, even in a tight month, "
+            f"and put it on autopay so it never slips. "
+        )
     else:
         body = (
             f"Your credit utilization could be dragging your score down. "

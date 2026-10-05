@@ -53,7 +53,31 @@ TEMPLATES = {
         "The credit utilization math on a {l} limit",
         "Pay this much before your statement closes ({b} on {l})",
     ],
+    "apr_gap": [
+        "Same {b} debt: {hi}% APR vs {lo}% APR",
+        "What a {hi}% APR really costs on {b}",
+        "{b} at {hi}% or {lo}%? The difference is wild",
+        "Is your {hi}% APR costing you this much?",
+        "Why one phone call about your APR matters ({b})",
+    ],
+    "balance_transfer": [
+        "Does a 0% balance transfer work on {b}?",
+        "0% for {m} months on {b}: worth the {f}% fee?",
+        "Balance transfer math on {b} at {apr}% APR",
+        "Is a balance transfer worth it? {b} test",
+        "{f}% fee vs {apr}% APR: the {b} balance transfer test",
+    ],
+    "payment_ladder": [
+        "{b} of debt: paying {p1}, {p2} or {p3} a month?",
+        "How long {b} takes at {p1} vs {p3} a month",
+        "Pick your payment: {b} at {apr}% APR",
+        "What changes if you pay {p3} instead of {p1}? ({b})",
+        "The monthly payment that clears {b} fastest",
+    ],
 }
+# Paylaşım ağırlığı: ilk 2 haftada min_trap ve utilization en çok izlendi; yeni türler denensin diye orta ağırlık
+WEIGHTS = {"min_trap": 3, "utilization": 3, "apr_gap": 2, "balance_transfer": 2, "payment_ladder": 2,
+           "extra_payment": 1, "snowball_vs_avalanche": 1}
 
 
 def round_to(x, step):
@@ -119,11 +143,56 @@ def make_utilization(rng):
     return params, t.format(b=money(b), l=money(l), u=round(r["utilization_pct"]))
 
 
+def make_apr_gap(rng):
+    b = round_to(rng.uniform(2000, 30000), 250)
+    hi = rng.randint(24, 30)
+    lo = rng.randint(12, hi - 6)
+    p = max(60, round_to(b * rng.uniform(0.025, 0.045), 10))
+    rh, rl = dm.payoff(b, hi, p), dm.payoff(b, lo, p)
+    if rh is None or rl is None or round(rh["total_interest"]) - round(rl["total_interest"]) < 300:
+        return None
+    params = {"balance": b, "apr_high": hi, "apr_low": lo, "payment": p}
+    return params, rng.choice(TEMPLATES["apr_gap"]).format(b=money(b), hi=hi, lo=lo)
+
+
+def make_balance_transfer(rng):
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from facts import promo_payoff
+    b = round_to(rng.uniform(2000, 20000), 250)
+    apr = rng.randint(20, 29)
+    m = rng.choice([12, 15, 18, 21])
+    f = rng.choice([3, 4, 5])
+    p = max(80, round_to(b * rng.uniform(0.03, 0.06), 10))
+    stay, bt = dm.payoff(b, apr, p), promo_payoff(b, apr, p, m, f)
+    if stay is None or bt is None:
+        return None
+    if round(stay["total_interest"]) - (round(bt["total_interest"]) + round(bt["fee"])) < 200:
+        return None
+    params = {"balance": b, "apr": apr, "payment": p, "promo_months": m, "fee_pct": f}
+    return params, rng.choice(TEMPLATES["balance_transfer"]).format(b=money(b), apr=apr, m=m, f=f)
+
+
+def make_payment_ladder(rng):
+    b = round_to(rng.uniform(2000, 25000), 250)
+    apr = rng.randint(16, 29)
+    p1 = max(60, round_to(b * rng.uniform(0.022, 0.03), 25))
+    pays = [p1, round_to(p1 * 1.5, 25), round_to(p1 * 2, 25)]
+    rs = [dm.payoff(b, apr, x) for x in pays]
+    if any(r is None for r in rs) or rs[0]["months"] - rs[2]["months"] < 12 or len(set(pays)) < 3:
+        return None
+    params = {"balance": b, "apr": apr, "payments": pays}
+    return params, rng.choice(TEMPLATES["payment_ladder"]).format(
+        b=money(b), apr=apr, p1=money(pays[0]), p2=money(pays[1]), p3=money(pays[2]))
+
+
 MAKERS = {
     "min_trap": make_min_trap,
     "extra_payment": make_extra_payment,
     "snowball_vs_avalanche": make_snowball,
     "utilization": make_utilization,
+    "apr_gap": make_apr_gap,
+    "balance_transfer": make_balance_transfer,
+    "payment_ladder": make_payment_ladder,
 }
 
 
@@ -138,17 +207,32 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--count", type=int, default=600, help="new rows to add")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--drop-unpublished", action="store_true",
+                    help="yayınlanmamış satırları sil (yeni türlerle yeniden karıştırmak için)")
     args = ap.parse_args()
 
     rng = random.Random(args.seed)
     rows = load_existing()
+    if args.drop_unpublished:
+        pub = Path(__file__).resolve().parent / "published.csv"
+        keep = set()
+        if pub.exists():
+            with pub.open(newline="", encoding="utf-8") as f:
+                keep = {r["topic_id"] for r in csv.DictReader(f)}
+        queue = Path(__file__).resolve().parent / "queue"
+        if queue.exists():
+            keep |= {json.loads(q.read_text(encoding="utf-8")).get("topic", {}).get("id") for q in queue.glob("*.json")}
+        rows = [r for r in rows if r["id"] in keep]
     titles = {r["title"] for r in rows}
     next_id = max((int(r["id"]) for r in rows), default=0) + 1
     pillars = list(MAKERS)
     added, attempts = 0, 0
     while added < args.count and attempts < args.count * 50:
         attempts += 1
-        pillar = pillars[added % len(pillars)]
+        # art arda aynı tür gelmesin; ağırlıklı seçim
+        last = rows[-1]["pillar"] if rows else None
+        options = [p for p in pillars if p != last]
+        pillar = rng.choices(options, weights=[WEIGHTS.get(p, 1) for p in options])[0]
         made = MAKERS[pillar](rng)
         if not made:
             continue
