@@ -6,12 +6,14 @@ import time
 
 import requests
 
-PROMPT = """You are a friendly personal-finance educator. Write a 45-second YouTube Shorts
+PROMPT = """You narrate a debt-calculator walkthrough for a YouTube Short. Write a 45-second
 voiceover (110-130 words) for the title: "{title}".
 Use ONLY these computed facts, never invent numbers:
 {facts_json}
-Structure: hook in first sentence (under 12 words) -> the math -> one actionable tip
+Structure: hook in first sentence (under 12 words) -> the math -> one general takeaway the numbers show
 -> CTA: "{cta_text}".
+You are NOT a person and NOT an advisor: never say "I", "my", "as an expert", "trust me", never tell the viewer
+what they should do with their own money. Describe what the calculation shows ("the math shows", "this example").
 No guarantees, no "you will", say "could". Plain spoken English. No emojis.
 Write every number exactly as it appears in the facts (keep the $ and % signs).
 Output only the script."""
@@ -39,6 +41,8 @@ def validate(script, facts):
         problems.append(f"numbers not in facts: {', '.join(bad)}")
     if re.search(r"\byou will\b|\bguarantee", script, re.I):
         problems.append("contains 'you will' or a guarantee")
+    if re.search(r"\bI\b|\bI'm\b|\bmy\b|\bas an expert\b|\btrust me\b", script):
+        problems.append("speaks as a person/expert (I, my, trust me)")
     return problems
 
 
@@ -114,7 +118,7 @@ def fallback(topic, f, cta):
             f"But as the balance drops, the minimum drops too, so progress slows to a crawl. "
             f"It takes {f['time_to_pay_off']} and you'd pay {f['total_interest_paid']} in interest. "
             f"That's {f['total_paid']} total for a {f['balance']} balance. "
-            f"The fix: pick a fixed payment and keep paying it even when the minimum shrinks. "
+            f"In this example, a fixed payment that does not shrink with the minimum changes the picture. "
         )
     elif p == "extra_payment":
         body = (
@@ -124,7 +128,7 @@ def fallback(topic, f, cta):
             f"Now add just {f['extra_per_month']} a month. "
             f"Payoff drops to {f['time_with_extra']}, and interest drops to {f['interest_with_extra']}. "
             f"That's {f['time_saved']} sooner and {f['interest_saved']} back in your pocket. "
-            f"Tip: set the extra payment to autopay the day after payday, so you never see the money. "
+            f"Worth knowing: set the extra payment to autopay the day after payday, so you never see the money. "
         )
     elif p == "snowball_vs_avalanche":
         cheaper = f["cheaper_method"]
@@ -142,7 +146,7 @@ def fallback(topic, f, cta):
             f"Avalanche attacks the highest rate first, starting with {f['avalanche_first_paid_off']}. "
             f"It finishes in {f['avalanche_time']} with {f['avalanche_interest']} in interest. "
             f"{verdict}. "
-            f"Tip: if quick wins keep you motivated, snowball could still be the better fit for you. "
+            f"Worth knowing: if quick wins keep you motivated, snowball could still be the better fit for you. "
         )
     elif p == "apr_gap":
         body = (
@@ -152,7 +156,7 @@ def fallback(topic, f, cta):
             f"At {f['low_apr']} APR it takes {f['time_at_low_apr']} and {f['interest_at_low_apr']} in interest. "
             f"That's {f['time_difference']} longer at the higher rate. "
             f"Same balance, same payment. The only thing that changed is the rate. "
-            f"Tip: call your card issuer and ask for a lower rate. It's a short call, and some people get a yes. "
+            f"Worth knowing: call your card issuer and ask for a lower rate. It's a short call, and some people get a yes. "
             f"If they say no, a lower rate card or a consolidation loan could be worth comparing. "
         )
     elif p == "balance_transfer":
@@ -173,7 +177,7 @@ def fallback(topic, f, cta):
             f"{lines} "
             f"Going from the smallest to the biggest payment could save {f['interest_difference_slowest_vs_fastest']} in interest. "
             f"Notice how the first jump in payment saves the most time. "
-            f"Tip: pick the highest payment you can keep every month, even in a tight month, "
+            f"Worth knowing: pick the highest payment you can keep every month, even in a tight month, "
             f"and put it on autopay so it never slips. "
         )
     else:
@@ -183,7 +187,7 @@ def fallback(topic, f, cta):
             f"A common guideline is to stay under 30 percent, and under 10 percent is often better. "
             f"To get under 30 percent, you'd pay down {f['pay_to_get_under_30_percent']}. "
             f"To get under 10 percent, pay down {f['pay_to_get_under_10_percent']}. "
-            f"Here's the trick: utilization is usually reported on your statement closing date, not your due date. "
-            f"So pay before the statement closes, and a lower balance could show up on your report. "
+            f"Worth knowing: utilization is usually reported on your statement closing date, not your due date. "
+            f"A payment made before the statement closes could show a lower balance on the report. "
         )
     return clean(body + cta)

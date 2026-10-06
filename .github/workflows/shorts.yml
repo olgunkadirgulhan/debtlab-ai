@@ -33,7 +33,7 @@ jobs:
       - id: g
         env:
           LOG_FILE: youtube/published.csv
-          SLOTS: "16:00,20:00,22:00"
+          SLOTS: "20:00"
         run: python3 .github/slot_guard.py
 
   make-and-upload:
