@@ -6,12 +6,15 @@ import time
 
 import requests
 
-PROMPT = """You narrate a debt-calculator walkthrough for a YouTube Short. Write a 45-second
-voiceover (110-130 words) for the title: "{title}".
+PROMPT = """You narrate a debt-calculator walkthrough for a YouTube Short. Write a 25-30 second
+voiceover (60-80 words) for the title: "{title}".
 Use ONLY these computed facts, never invent numbers:
 {facts_json}
-Structure: hook in first sentence (under 12 words) -> the math -> one general takeaway the numbers show
--> CTA: "{cta_text}".
+Retention matters more than completeness (viewers swipe away in the first 2 seconds):
+- Sentence 1 (under 10 words) states the single most surprising number from the facts as a fact, e.g.
+  "31 years. That's how long the minimum takes." No greeting, no "let's", no question-only opener.
+- Then only the 2-3 numbers needed to see why. Skip every other fact.
+- One short takeaway the numbers show, then the CTA: "{cta_text}".
 You are NOT a person and NOT an advisor: never say "I", "my", "as an expert", "trust me", never tell the viewer
 what they should do with their own money. Describe what the calculation shows ("the math shows", "this example").
 No guarantees, no "you will", say "could". Plain spoken English. No emojis.
@@ -34,8 +37,8 @@ def invented_numbers(script, facts):
 def validate(script, facts):
     words = len(script.split())
     problems = []
-    if not 90 <= words <= 150:
-        problems.append(f"word count {words}, must be 110-130")
+    if not 50 <= words <= 95:
+        problems.append(f"word count {words}, must be 60-80")
     bad = invented_numbers(script, facts)
     if bad:
         problems.append(f"numbers not in facts: {', '.join(bad)}")
@@ -190,4 +193,6 @@ def fallback(topic, f, cta):
             f"Worth knowing: utilization is usually reported on your statement closing date, not your due date. "
             f"A payment made before the statement closes could show a lower balance on the report. "
         )
-    return clean(body + cta)
+    # kısa tut (Shorts izlenme süresi): ilk 4 cümle + CTA
+    sentences = re.split(r"(?<=[.?!])\s+", clean(body))
+    return clean(" ".join(sentences[:4]) + " " + cta)
