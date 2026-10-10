@@ -113,7 +113,16 @@ def write(topic, built, cta_text):
 
 def fallback(topic, f, cta):
     p = topic["pillar"]
-    if p == "min_trap":
+    if p == "two_friends":
+        n1, n2 = f["friend_paying_minimum"], f["friend_paying_fixed"]
+        body = (
+            f"Same debt, two choices, and a {f['interest_difference']} difference. "
+            f"{n1} and {n2} both owe {f['balance']} at {f['apr']} APR. "
+            f"{n1} pays only the minimum and needs {f[n1 + '_time_to_pay_off']}, paying {f[n1 + '_total_interest']} in interest. "
+            f"{n2} pays a fixed {f[n2 + '_monthly_payment']} a month and is done in {f[n2 + '_time_to_pay_off']}, "
+            f"with {f[n2 + '_total_interest']} in interest. "
+        )
+    elif p == "min_trap":
         body = (
             f"Paying only the minimum could keep you in debt for {f['time_to_pay_off']}. "
             f"Here's the math. You owe {f['balance']} at {f['apr']} APR. "

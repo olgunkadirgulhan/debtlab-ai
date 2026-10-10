@@ -240,7 +240,41 @@ def _payment_ladder(p):
     }
 
 
+def _two_friends(p):
+    n1, n2 = p["names"]
+    lo = dm.payoff_minimum(p["balance"], p["apr"], 1, 25)
+    hi = dm.payoff(p["balance"], p["apr"], p["payment"])
+    diff = round(lo["total_interest"]) - round(hi["total_interest"])
+    facts = {
+        "balance": money(p["balance"]),
+        "apr": f"{p['apr']}%",
+        "friend_paying_minimum": n1,
+        "friend_paying_fixed": n2,
+        f"{n2}_monthly_payment": money(p["payment"]),
+        f"{n1}_first_minimum_payment": money(lo["first_payment"]),
+        f"{n1}_time_to_pay_off": years_months(lo["months"]),
+        f"{n1}_total_interest": money(lo["total_interest"]),
+        f"{n2}_time_to_pay_off": years_months(hi["months"]),
+        f"{n2}_total_interest": money(hi["total_interest"]),
+        "interest_difference": money(diff),
+    }
+    return {
+        "facts": facts,
+        "hook": {"big": money(diff), "small": f"difference between {n1} and {n2}"},
+        "chart": {
+            "type": "lines",
+            "series": [
+                {"label": f"{n1} (minimum)", "data": lo["history"], "color": "red"},
+                {"label": f"{n2} ({money(p['payment'])}/mo)", "data": hi["history"], "color": "green"},
+            ],
+            "x_unit": "months",
+        },
+        "stats": [(f"{n1}", years_months(lo["months"]).split(" and ")[0]), (f"{n2}", years_months(hi["months"]).split(" and ")[0])],
+    }
+
+
 BUILDERS = {
+    "two_friends": _two_friends,
     "min_trap": _min_trap,
     "extra_payment": _extra_payment,
     "snowball_vs_avalanche": _snowball,

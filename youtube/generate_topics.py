@@ -74,9 +74,16 @@ TEMPLATES = {
         "What changes if you pay {p3} instead of {p1}? ({b})",
         "The monthly payment that clears {b} fastest",
     ],
+    "two_friends": [
+        "Two friends, same {b} debt. One pays the minimum 😬",
+        "{n1} pays the minimum. {n2} pays {p}. Same {b} debt",
+        "Same {b} card, two choices: {n1} vs {n2}",
+        "Minimum vs {p} a month on {b}: two friends compared",
+        "{n1} and {n2} both owe {b}. Only one is out fast",
+    ],
 }
 # Paylaşım ağırlığı: ilk 2 haftada min_trap ve utilization en çok izlendi; yeni türler denensin diye orta ağırlık
-WEIGHTS = {"min_trap": 3, "utilization": 3, "apr_gap": 2, "balance_transfer": 2, "payment_ladder": 2,
+WEIGHTS = {"two_friends": 4, "min_trap": 3, "utilization": 3, "apr_gap": 2, "balance_transfer": 2, "payment_ladder": 2,
            "extra_payment": 1, "snowball_vs_avalanche": 1}
 
 
@@ -185,7 +192,25 @@ def make_payment_ladder(rng):
         b=money(b), apr=apr, p1=money(pays[0]), p2=money(pays[1]), p3=money(pays[2]))
 
 
+FRIENDS = ["Alex", "Sam", "Jordan", "Taylor", "Chris", "Morgan", "Jamie", "Casey", "Riley", "Drew"]
+
+
+def make_two_friends(rng):
+    """2026-10-10: kıyas formatı (Bloop'ta 'Normal vs Psycho' tuttu): aynı borç, biri minimum, biri sabit ödeme."""
+    b = round_to(rng.uniform(3000, 20000), 250)
+    apr = rng.randint(18, 29)
+    p = max(100, round_to(b * rng.uniform(0.03, 0.05), 25))
+    lo = dm.payoff_minimum(b, apr, 1, 25)
+    hi = dm.payoff(b, apr, p)
+    if hi is None or lo["months"] >= dm.MAX_MONTHS or lo["months"] - hi["months"] < 60:
+        return None
+    n1, n2 = rng.sample(FRIENDS, 2)
+    params = {"balance": b, "apr": apr, "payment": p, "names": [n1, n2]}
+    return params, rng.choice(TEMPLATES["two_friends"]).format(b=money(b), p=money(p), n1=n1, n2=n2)
+
+
 MAKERS = {
+    "two_friends": make_two_friends,
     "min_trap": make_min_trap,
     "extra_payment": make_extra_payment,
     "snowball_vs_avalanche": make_snowball,

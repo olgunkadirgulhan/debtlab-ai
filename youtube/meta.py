@@ -12,6 +12,7 @@ DISCLAIMER = (
 )
 
 TAGS = {
+    "two_friends": ["minimum payment vs fixed payment", "credit card debt", "debt payoff", "pay off debt faster"],
     "min_trap": ["minimum payment", "credit card debt", "credit card interest", "debt payoff"],
     "extra_payment": ["pay off debt faster", "extra payment", "credit card debt", "debt payoff"],
     "snowball_vs_avalanche": ["debt snowball", "debt avalanche", "snowball vs avalanche", "debt payoff plan"],
@@ -21,6 +22,7 @@ TAGS = {
     "payment_ladder": ["debt payoff calculator", "monthly payment", "credit card debt", "pay off debt faster"],
 }
 HASHTAGS = {
+    "two_friends": "#creditcarddebt #debtfree",
     "min_trap": "#creditcarddebt #debtfree",
     "extra_payment": "#debtfree #payoffdebt",
     "snowball_vs_avalanche": "#debtsnowball #debtfree",
