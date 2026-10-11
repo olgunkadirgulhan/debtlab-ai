@@ -4,10 +4,8 @@ on:
     branches: [main]
     paths: ["web/**", "shared/**", ".github/workflows/deploy.yml"]
   # Bot commits (new video, new article) use GITHUB_TOKEN, which does not fire
-  # `push` workflows, so redeploy after those workflows finish instead.
-  workflow_run:
-    workflows: [shorts, blog]
-    types: [completed]
+  # `push`; shorts.yml and blog.yml start this via workflow_dispatch only when
+  # they actually committed (was workflow_run after every run: ~10 deploys/day).
   workflow_dispatch:
 
 concurrency:

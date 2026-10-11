@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # to start deploy-site after a new commit
 
 concurrency:
   group: repo-writes
@@ -27,6 +28,8 @@ jobs:
           BLOG_REVIEW_FIRST: ${{ vars.BLOG_REVIEW_FIRST }}
         run: python blog/generate.py
       - name: Commit (Cloudflare Pages deploys on push)
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "debtlab-bot"
           git config user.email "bot@users.noreply.github.com"
@@ -35,3 +38,4 @@ jobs:
           git commit -m "blog: $(date -u +%F)"
           git pull --rebase
           git push
+          gh workflow run deploy.yml --ref main
