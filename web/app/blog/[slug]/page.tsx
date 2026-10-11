@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AdSlot, Ctas, Disclaimer, Faq } from "@/components/Blocks";
+import { AdSlot, Ctas, Disclaimer, Faq, Offers } from "@/components/Blocks";
 import Icon from "@/components/Icon";
 import ShortCard from "@/components/ShortCard";
 import { allPosts, formatDate, getPost } from "@/lib/blog";
@@ -73,6 +73,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <ShortCard id={post.video} title="Watch the 60-second version" />
             </div>
           )}
+          <Offers />
           <Ctas />
         </aside>
       </div>

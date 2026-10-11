@@ -4,6 +4,8 @@ import videos from "./generated/videos.json";
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://debtlabai.com").replace(/\/$/, "");
 export const SITE_NAME = "DebtLab";
 export const SITE_TAGLINE = "Pay off debt faster. See exactly when.";
+// Legal operator of the site. Must match the AdSense / affiliate / payout accounts.
+export const OPERATOR = "Orkun Burak Gülhan";
 
 export const LINKS = links as {
   website: string;
@@ -11,6 +13,9 @@ export const LINKS = links as {
   app_store: string;
   affiliate_experian: string;
   youtube_channel: string;
+  affiliate_personal_loan: string;
+  affiliate_balance_transfer: string;
+  affiliate_debt_relief: string;
 };
 
 export type Video = { id: string; title: string; pillar: string; date: string };
@@ -40,6 +45,13 @@ export const CALCULATORS = [
     title: "Credit Card Payoff Calculator",
     short: "Credit Card Payoff",
     blurb: "One card, one payment: how long it takes and what it costs.",
+    icon: "card",
+  },
+  {
+    href: "/payoff/",
+    title: "Credit Card Payoff Tables",
+    short: "Payoff Tables",
+    blurb: "Pick your balance and APR to see payment options and payoff dates.",
     icon: "card",
   },
   {

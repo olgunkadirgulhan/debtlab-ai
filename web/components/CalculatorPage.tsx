@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AdSlot, CalculatorGrid, Ctas, Disclaimer, Faq, PageIntro, QA } from "@/components/Blocks";
+import { AdSlot, CalculatorGrid, Ctas, Disclaimer, Faq, Offers, PageIntro, QA } from "@/components/Blocks";
 
 type Props = {
   href: string;
@@ -27,6 +27,7 @@ export default function CalculatorPage({ href, eyebrow, title, intro, calculator
       <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_300px]">
         <article className="prose max-w-none">{article}</article>
         <aside className="space-y-4">
+          <Offers />
           <Ctas />
         </aside>
       </div>

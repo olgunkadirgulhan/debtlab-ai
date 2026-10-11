@@ -73,6 +73,7 @@ def description(topic, built, l=None):
     out.append("")
     if l.get("website"):
         out.append(f"Free debt calculators: {l['website']}")
+        out.append(f"Payoff tables by balance and APR: {l['website'].rstrip('/')}/payoff/")
     if l.get("play_store"):
         out.append(f"Android app: {l['play_store']}")
     if l.get("app_store"):

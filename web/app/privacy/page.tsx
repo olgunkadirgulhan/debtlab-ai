@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import LegalPage from "@/components/LegalPage";
+import { OPERATOR } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Privacy Policy", alternates: { canonical: "/privacy/" } };
 
 export default function Page() {
   return (
-    <LegalPage title="Privacy Policy" updated="September 23, 2026">
+    <LegalPage title="Privacy Policy" updated="October 11, 2026">
       <p>
         This policy explains what information DebtLab (&quot;we&quot;, &quot;us&quot;) collects when you use this website and our related
         apps, and how it is used.
@@ -19,6 +20,9 @@ export default function Page() {
       <p>
         Like most websites, our hosting provider may log basic technical information such as IP address, browser type, pages visited and
         the time of your visit. We use aggregated data to keep the site secure and understand which pages are useful.
+      </p>
+      <p>
+        We may use Cloudflare Web Analytics to count page views. It does not use cookies or track you across websites.
       </p>
       <h2>Cookies and advertising</h2>
       <p>
@@ -52,6 +56,8 @@ export default function Page() {
       </p>
       <h2>Changes</h2>
       <p>We may update this policy. The date at the top shows when it last changed.</p>
+      <h2>Who we are</h2>
+      <p>DebtLab is operated by {OPERATOR}, who is responsible for this website and the information described in this policy.</p>
       <h2>Contact</h2>
       <p>Questions about this policy can be sent through the contact details on our About page.</p>
     </LegalPage>

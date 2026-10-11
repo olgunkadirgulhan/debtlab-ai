@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CALCULATORS, DISCLAIMER, LINKS, SITE_NAME } from "@/lib/site";
+import { CALCULATORS, DISCLAIMER, LINKS, OPERATOR, SITE_NAME } from "@/lib/site";
 
 function Logo() {
   return (
@@ -24,6 +24,9 @@ export function SiteHeader() {
         <nav className="flex items-center gap-1 text-sm font-medium text-muted sm:gap-2">
           <Link href="/#calculators" className="rounded-full px-3 py-2 hover:bg-brand-soft hover:text-brand">
             Calculators
+          </Link>
+          <Link href="/payoff/" className="hidden rounded-full px-3 py-2 hover:bg-brand-soft hover:text-brand sm:block">
+            Payoff tables
           </Link>
           <Link href="/blog/" className="rounded-full px-3 py-2 hover:bg-brand-soft hover:text-brand">
             Blog
@@ -81,7 +84,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-line">
         <p className="mx-auto max-w-6xl px-4 py-6 text-xs leading-relaxed text-muted">
-          {DISCLAIMER} © {new Date().getFullYear()} {SITE_NAME}.
+          {DISCLAIMER} © {new Date().getFullYear()} {SITE_NAME}, operated by {OPERATOR}.
         </p>
       </div>
     </footer>

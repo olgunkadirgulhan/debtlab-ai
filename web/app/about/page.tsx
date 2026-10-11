@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CalculatorGrid, PageIntro } from "@/components/Blocks";
-import { LINKS } from "@/lib/site";
+import { LINKS, OPERATOR } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About DebtLab",
@@ -44,6 +44,7 @@ export default function Page() {
         </p>
         <h2>Contact</h2>
         <p>{CONTACT ? <>Email us at <a href={`mailto:${CONTACT}`}>{CONTACT}</a>.</> : "Reach us through our YouTube channel's About page."}</p>
+        <p className="text-sm text-muted">DebtLab is operated by {OPERATOR}.</p>
         <p className="text-sm text-muted">DebtLab provides educational information only and is not a financial advisor.</p>
       </div>
       <section className="mt-12">

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import LegalPage from "@/components/LegalPage";
+import { OPERATOR } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Terms of Use", alternates: { canonical: "/terms/" } };
 
 export default function Page() {
   return (
-    <LegalPage title="Terms of Use" updated="September 23, 2026">
+    <LegalPage title="Terms of Use" updated="October 11, 2026">
       <p>By using DebtLab you agree to these terms. If you do not agree, please do not use the site.</p>
       <h2>Educational use only</h2>
       <p>
@@ -37,6 +38,8 @@ export default function Page() {
         To the fullest extent permitted by law, DebtLab is not liable for any loss or damage arising from your use of the site or reliance
         on its content. The site is provided &quot;as is&quot; without warranties of any kind.
       </p>
+      <h2>Operator</h2>
+      <p>DebtLab is operated by {OPERATOR}.</p>
       <h2>Changes</h2>
       <p>We may update these terms at any time. Continued use of the site means you accept the updated terms.</p>
     </LegalPage>

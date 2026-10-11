@@ -4,6 +4,8 @@ import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
+const GSC_TOKEN = process.env.NEXT_PUBLIC_GSC_VERIFICATION;
+
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
 export const metadata: Metadata = {
@@ -14,9 +16,13 @@ export const metadata: Metadata = {
   openGraph: { siteName: SITE_NAME, type: "website", locale: "en_US" },
   twitter: { card: "summary_large_image" },
   alternates: { canonical: "/" },
+  ...(GSC_TOKEN && { verification: { google: GSC_TOKEN } }),
 };
 
 const ADSENSE = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+// Cloudflare Web Analytics token (cookie-free). The Search Console token is GSC_TOKEN above.
+const CF_BEACON = process.env.NEXT_PUBLIC_CF_BEACON;
+
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
@@ -30,6 +36,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />
+        {CF_BEACON && (
+          <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: CF_BEACON })} />
+        )}
       </body>
     </html>
   );
