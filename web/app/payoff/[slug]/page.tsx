@@ -192,6 +192,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <p className="text-lg font-bold">Try it with your numbers</p>
             <p className="mt-1 text-sm text-white/80">Credit Card Payoff Calculator →</p>
           </Link>
+          <Link href="/free-debt-payoff-planner/" className="card block p-5 hover:border-brand">
+            <p className="font-semibold">Free printable debt tracker</p>
+            <p className="mt-1 text-sm text-muted">Debt list, coloring chart and 60-month countdown. PDF, no sign-up.</p>
+          </Link>
           <Offers keys={["balance_transfer", "personal_loan", "debt_relief"]} />
           <Ctas />
         </aside>

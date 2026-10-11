@@ -5,3 +5,7 @@ __pycache__/
 .env
 youtube/secrets.local.env
 .wrangler/
+
+# paid product files (public repo): build locally with tools/planner/
+product/
+tools/pinterest/out/

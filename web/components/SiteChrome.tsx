@@ -63,6 +63,7 @@ export function SiteFooter() {
         <div>
           <h2 className="mb-3 text-sm font-semibold">DebtLab</h2>
           <ul className="space-y-2 text-sm text-muted">
+            <li><Link href="/free-debt-payoff-planner/" className="hover:text-brand">Free printable tracker</Link></li>
             <li><Link href="/blog/" className="hover:text-brand">Blog</Link></li>
             <li><Link href="/about/" className="hover:text-brand">About</Link></li>
             {LINKS.youtube_channel && (

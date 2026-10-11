@@ -16,6 +16,7 @@ export const LINKS = links as {
   affiliate_personal_loan: string;
   affiliate_balance_transfer: string;
   affiliate_debt_relief: string;
+  planner_shop: string;
 };
 
 export type Video = { id: string; title: string; pillar: string; date: string };
