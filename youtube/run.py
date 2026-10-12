@@ -16,6 +16,7 @@ retried first on the next run, so the repo never stores video files.
 import argparse
 import csv
 import json
+import random
 import os
 import sys
 import traceback
@@ -112,11 +113,36 @@ def enqueue(topic, script, source, error):
     log(f"queued topic {topic['id']} for retry")
 
 
+# 2026-10-12 trendler: "credit card / pay off debt / credit score" aramalarında öne çıkan konu türü önce gelir
+TREND_KEYS = {'min_trap': ['minimum payment'], 'extra_payment': ['pay off debt fast', 'extra payment', 'faster'],
+              'snowball_vs_avalanche': ['snowball', 'avalanche'], 'utilization': ['utilization', 'credit score'],
+              'apr_gap': ['apr', 'interest rate'], 'balance_transfer': ['balance transfer', '0%'],
+              'payment_ladder': ['monthly payment', 'payoff'], 'two_friends': ['credit card debt', 'minimum']}
+
+
+def trend_text():
+    try:
+        import requests
+        out = ''
+        for q in ('credit card', 'pay off debt', 'credit score'):
+            r = requests.get('https://suggestqueries.google.com/complete/search',
+                             params={'client': 'firefox', 'ds': 'yt', 'hl': 'en', 'q': q}, timeout=6)
+            out += ' ' + ' '.join(r.json()[1]).lower()
+        return out
+    except Exception:
+        return ''
+
+
 def next_topic(topics, skip):
-    for tid, t in topics.items():
-        if tid not in skip:
-            return t
-    return None
+    nxt = [t for tid, t in topics.items() if tid not in skip][:20]
+    if not nxt:
+        return None
+    tt = trend_text()
+    hits = [t for t in nxt if any(w in tt for w in TREND_KEYS.get(t['pillar'], []))]
+    if hits and random.random() < 0.5:
+        log(f"trend konusu: [{hits[0]['pillar']}] {hits[0]['title']}")
+        return hits[0]
+    return nxt[0]
 
 
 def produce(topic, script=None, source=None):
