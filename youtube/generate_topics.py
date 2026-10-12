@@ -76,6 +76,13 @@ TEMPLATES = {
         "The monthly payment that clears {b} fastest",
         "Pay off {b} of debt fast: {p1} vs {p3} a month",
     ],
+    "money_choice": [
+        "{a} or {b}? Most people pick wrong 🤔",
+        "Would you rather: {a} or {b}?",
+        "{a} vs {b}: which is more money?",
+        "Quick money test: {a} or {b}?",
+        "Pick one: {a} or {b} 💸",
+    ],
     "two_friends": [
         "Two friends, same {b} debt. One pays the minimum 😬",
         "{n1} pays the minimum. {n2} pays {p}. Same {b} debt",
@@ -86,7 +93,7 @@ TEMPLATES = {
     ],
 }
 # Paylaşım ağırlığı: ilk 2 haftada min_trap ve utilization en çok izlendi; yeni türler denensin diye orta ağırlık
-WEIGHTS = {"two_friends": 4, "min_trap": 3, "utilization": 3, "apr_gap": 2, "balance_transfer": 2, "payment_ladder": 2,
+WEIGHTS = {"money_choice": 6, "two_friends": 4, "min_trap": 3, "utilization": 3, "apr_gap": 2, "balance_transfer": 2, "payment_ladder": 2,
            "extra_payment": 1, "snowball_vs_avalanche": 1}
 
 
@@ -212,7 +219,33 @@ def make_two_friends(rng):
     return params, rng.choice(TEMPLATES["two_friends"]).format(b=money(b), p=money(p), n1=n1, n2=n2)
 
 
+CHOICES = ("daily_vs_monthly", "lump_vs_monthly", "habit_10y")
+
+
+def make_money_choice(rng):
+    """2026-10-12: etkileşimli 'hangisini seçerdin' formatı (kanal medyanı 8): izleyici seçer, hesap açıklanır."""
+    kind = rng.choice(CHOICES)
+    if kind == "daily_vs_monthly":
+        d = rng.choice([3, 4, 5, 6, 7, 8, 10, 12, 15])
+        m = round_to(d * 30 - rng.choice([0, 5, 10]), 5)
+        params = {"kind": kind, "daily": d, "monthly": m}
+        a, b = f"${d} a day", f"${m} a month"
+    elif kind == "lump_vs_monthly":
+        lump = rng.choice([1000, 2000, 5000, 10000])
+        n = rng.choice([10, 12, 24])
+        m = round_to(lump * rng.uniform(1.05, 1.25) / n, 5)
+        params = {"kind": kind, "lump": lump, "monthly": m, "months": n}
+        a, b = f"${lump:,} today", f"${m} a month for {n} months"
+    else:
+        cheap, pricey = rng.choice([(1, 6), (2, 7), (1, 5), (3, 12), (2, 9)])
+        params = {"kind": kind, "cheap": cheap, "pricey": pricey, "years": 10}
+        a, b = f"a ${pricey} coffee every day", f"a ${cheap} coffee at home"
+    order = rng.random() < 0.5
+    return params, rng.choice(TEMPLATES["money_choice"]).format(a=a if order else b, b=b if order else a)
+
+
 MAKERS = {
+    "money_choice": make_money_choice,
     "two_friends": make_two_friends,
     "min_trap": make_min_trap,
     "extra_payment": make_extra_payment,

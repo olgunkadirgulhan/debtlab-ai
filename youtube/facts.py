@@ -273,7 +273,47 @@ def _two_friends(p):
     }
 
 
+def _money_choice(p):
+    k = p["kind"]
+    if k == "daily_vs_monthly":
+        d, m = p["daily"], p["monthly"]
+        a_year, b_year = d * 365, m * 12
+        A, B = f"${d} a day", f"${m} a month"
+        sa = [d * 365 / 12 * i for i in range(13)]; sb = [m * i for i in range(13)]
+        facts = {"option_a": A, "option_b": B, "option_a_per_year": money(a_year), "option_b_per_year": money(b_year),
+                 "difference_per_year": money(abs(a_year - b_year)), "more_money": A if a_year > b_year else B,
+                 "why": "a year has 365 days, not 360"}
+        big = money(abs(a_year - b_year)) if a_year != b_year else "SAME"
+        small = "a year between the two"
+    elif k == "lump_vs_monthly":
+        L, m, n = p["lump"], p["monthly"], p["months"]
+        tot = m * n
+        A, B = f"{money(L)} today", f"${m} a month for {n} months"
+        sa = [L] * (n + 1); sb = [m * i for i in range(n + 1)]
+        facts = {"option_a": A, "option_b": B, "option_a_total": money(L), "option_b_total": money(tot),
+                 "difference": money(tot - L), "months_to_wait": str(n),
+                 "trade_off": "more total money later versus the full amount right now"}
+        big, small = money(tot - L), f"more in total, if you can wait {n} months"
+    else:
+        c, e, y = p["cheap"], p["pricey"], p["years"]
+        A, B = f"a ${e} coffee every day", f"a ${c} coffee at home"
+        sa = [e * 365 * i for i in range(y + 1)]; sb = [c * 365 * i for i in range(y + 1)]
+        facts = {"option_a": A, "option_b": B, "option_a_per_year": money(e * 365), "option_b_per_year": money(c * 365),
+                 "option_a_10_years": money(e * 365 * y), "option_b_10_years": money(c * 365 * y),
+                 "difference_10_years": money((e - c) * 365 * y)}
+        big, small = money((e - c) * 365 * y), "the gap after 10 years"
+    return {
+        "facts": facts,
+        "hook": {"big": big, "small": small},
+        "chart": {"type": "lines", "series": [{"label": A, "data": sa, "color": "red"},
+                                               {"label": B, "data": sb, "color": "green"}],
+                  "x_unit": "years" if k == "habit_10y" else "months"},
+        "stats": [("A", A), ("B", B)],
+    }
+
+
 BUILDERS = {
+    "money_choice": _money_choice,
     "two_friends": _two_friends,
     "min_trap": _min_trap,
     "extra_payment": _extra_payment,

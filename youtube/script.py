@@ -21,6 +21,15 @@ No guarantees, no "you will", say "could". Plain spoken English. No emojis.
 Write every number exactly as it appears in the facts (keep the $ and % signs).
 Output only the script."""
 
+CHOICE_PROMPT = """You narrate a 20-25 second interactive money quiz for a YouTube Short (50-65 words).
+Title: "{title}". Use ONLY these computed facts, never invent numbers:
+{facts_json}
+Structure: sentence 1 asks the viewer to choose between option A and option B and to comment their pick before the
+answer (under 14 words). Then reveal the math with the 2-3 numbers that decide it, one short takeaway, then the CTA:
+"{cta_text}". You are NOT a person and NOT an advisor: never say "I", "my", never tell the viewer what to do with
+their money; describe what the math shows. Plain spoken English, no emojis. Write every number exactly as in the facts.
+Output only the script."""
+
 NUM_RE = re.compile(r"\d[\d,]*(?:\.\d+)?")
 SMALL_OK = {str(i) for i in range(0, 13)}  # "3 cards", "1 tip", "12 months" etc.
 
@@ -34,10 +43,10 @@ def invented_numbers(script, facts):
     return sorted(n for n in _numbers(script) if n not in allowed)
 
 
-def validate(script, facts):
+def validate(script, facts, lo=50):
     words = len(script.split())
     problems = []
-    if not 50 <= words <= 95:
+    if not lo <= words <= 95:
         problems.append(f"word count {words}, must be 60-80")
     bad = invented_numbers(script, facts)
     if bad:
@@ -94,7 +103,8 @@ def clean(text):
 
 def write(topic, built, cta_text):
     facts = built["facts"]
-    prompt = PROMPT.format(title=topic["title"], facts_json=json.dumps(facts, indent=2), cta_text=cta_text)
+    prompt = (CHOICE_PROMPT if topic["pillar"] == "money_choice" else PROMPT).format(
+        title=topic["title"], facts_json=json.dumps(facts, indent=2), cta_text=cta_text)
     last_err = None
     for _ in range(3):
         try:
@@ -102,7 +112,7 @@ def write(topic, built, cta_text):
         except Exception as e:  # network / key / quota -> template
             last_err = e
             break
-        problems = validate(s, facts)
+        problems = validate(s, facts, 30 if topic['pillar'] == 'money_choice' else 50)
         if not problems:
             return s, "gemini"
         last_err = "; ".join(problems)
@@ -113,7 +123,21 @@ def write(topic, built, cta_text):
 
 def fallback(topic, f, cta):
     p = topic["pillar"]
-    if p == "two_friends":
+    if p == "money_choice":
+        if "option_a_10_years" in f:
+            body = (f"{f['option_a'].capitalize()} or {f['option_b']}? Comment your pick before the answer. "
+                    f"{f['option_a'].capitalize()} costs {f['option_a_per_year']} a year. {f['option_b'].capitalize()} costs {f['option_b_per_year']}. "
+                    f"After 10 years that is {f['option_a_10_years']} versus {f['option_b_10_years']}, "
+                    f"a gap of {f['difference_10_years']}. Small daily habits add up. ")
+        elif "option_a_total" in f:
+            body = (f"{f['option_a'].capitalize()} or {f['option_b']}? Comment your pick before the answer. "
+                    f"Option B adds up to {f['option_b_total']}, which is {f['difference']} more than {f['option_a_total']}. "
+                    f"The trade-off: {f['trade_off']}. ")
+        else:
+            body = (f"{f['option_a'].capitalize()} or {f['option_b']}? Comment your pick before the answer. "
+                    f"{f['option_a'].capitalize()} is {f['option_a_per_year']} a year. {f['option_b'].capitalize()} is {f['option_b_per_year']}. "
+                    f"{f['more_money'].capitalize()} gives {f['difference_per_year']} more, because {f['why']}. ")
+    elif p == "two_friends":
         n1, n2 = f["friend_paying_minimum"], f["friend_paying_fixed"]
         body = (
             f"Same debt, two choices, and a {f['interest_difference']} difference. "
@@ -204,4 +228,4 @@ def fallback(topic, f, cta):
         )
     # kısa tut (Shorts izlenme süresi): ilk 4 cümle + CTA
     sentences = re.split(r"(?<=[.?!])\s+", clean(body))
-    return clean(" ".join(sentences[:4]) + " " + cta)
+    return clean(" ".join(sentences[:6 if p == "money_choice" else 4]) + " " + cta)

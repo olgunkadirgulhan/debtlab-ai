@@ -12,6 +12,7 @@ DISCLAIMER = (
 )
 
 TAGS = {
+    "money_choice": ["would you rather money", "money quiz", "saving money", "money habits", "personal finance quiz"],
     "two_friends": ["minimum payment vs fixed payment", "credit card debt", "debt payoff", "pay off debt faster"],
     "min_trap": ["minimum payment", "credit card debt", "credit card interest", "debt payoff"],
     "extra_payment": ["pay off debt faster", "extra payment", "credit card debt", "debt payoff"],
@@ -22,6 +23,7 @@ TAGS = {
     "payment_ladder": ["debt payoff calculator", "monthly payment", "credit card debt", "pay off debt faster"],
 }
 HASHTAGS = {
+    "money_choice": "#moneyquiz #savingmoney",
     "two_friends": "#creditcarddebt #debtfree",
     "min_trap": "#creditcarddebt #debtfree",
     "extra_payment": "#debtfree #payoffdebt",
