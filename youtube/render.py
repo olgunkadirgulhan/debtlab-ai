@@ -359,6 +359,10 @@ def render(out_mp4, audio_wav, duration, words, title, built, cta):
             d.rounded_rectangle([(W - dw) / 2 - 24, DISCLAIMER_Y - 10, (W + dw) / 2 + 24, DISCLAIMER_Y + 46], radius=28, fill=(0, 0, 0, 110))
             centered(d, DISCLAIMER_Y, DISCLAIMER, df, COL["muted"])
 
+            if fi == 0:
+                first = img.copy()
+            if H > W and t > total - 0.45:   # dikey Short: son 0.45 sn ilk kareye karışır (kesintisiz döngü)
+                img = Image.blend(img, first, min(1.0, (t - (total - 0.45)) / 0.45))
             proc.stdin.write(img.tobytes())
     finally:
         proc.stdin.close()
