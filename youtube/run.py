@@ -137,6 +137,13 @@ def next_topic(topics, skip):
     nxt = [t for tid, t in topics.items() if tid not in skip][:20]
     if not nxt:
         return None
+    # 2026-10-12: etkileşimli 'Money Choice' formatı her iki videodan birinde (kanal medyanı 8 izlenmeydi)
+    last = published_rows()[-1:] if published_rows() else []
+    if not last or last[0].get("pillar") != "money_choice":
+        mc = [t for tid, t in topics.items() if tid not in skip and t["pillar"] == "money_choice"]
+        if mc:
+            log(f"money choice: {mc[0]['title']}")
+            return mc[0]
     tt = trend_text()
     hits = [t for t in nxt if any(w in tt for w in TREND_KEYS.get(t['pillar'], []))]
     if hits and random.random() < 0.5:
