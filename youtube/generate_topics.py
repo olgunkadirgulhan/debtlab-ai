@@ -35,6 +35,7 @@ TEMPLATES = {
     "extra_payment": [
         "{b} at {apr}% APR: what an extra payment changes",
         "Add {x} a month to a {b} balance. Watch what happens",
+        "How to pay off {b} of credit card debt faster: {x} extra a month",  # arama: "pay off debt fast"
         "How {x} extra per month kills {b} of debt faster",
         "{b} at {apr}%: paying {p} vs {p2} a month",
         "The {x} trick that saves months on {b} of debt",
@@ -73,6 +74,7 @@ TEMPLATES = {
         "Pick your payment: {b} at {apr}% APR",
         "What changes if you pay {p3} instead of {p1}? ({b})",
         "The monthly payment that clears {b} fastest",
+        "Pay off {b} of debt fast: {p1} vs {p3} a month",
     ],
     "two_friends": [
         "Two friends, same {b} debt. One pays the minimum 😬",
@@ -80,6 +82,7 @@ TEMPLATES = {
         "Same {b} card, two choices: {n1} vs {n2}",
         "Minimum vs {p} a month on {b}: two friends compared",
         "{n1} and {n2} both owe {b}. Only one is out fast",
+        "Credit card debt payoff: minimum vs {p} a month on {b}",
     ],
 }
 # Paylaşım ağırlığı: ilk 2 haftada min_trap ve utilization en çok izlendi; yeni türler denensin diye orta ağırlık
