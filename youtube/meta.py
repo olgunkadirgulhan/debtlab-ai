@@ -92,5 +92,6 @@ def tags(topic):
 
 
 def title(topic):
-    t = topic["title"]
+    t = topic["title"].strip()
+    t = t[:1].upper() + t[1:]   # bazı konu başlıkları küçük harfle başlıyordu ("a $2 coffee...")
     return t if len(t) + 8 > 100 else f"{t} #Shorts"
