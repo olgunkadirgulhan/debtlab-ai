@@ -5,6 +5,10 @@ on:
     - cron: "41 14-23 * * *"
   workflow_dispatch:
     inputs:
+      auto:
+        description: Harici zamanlayıcı (cron-job.org) - planlı çalışma gibi davran
+        type: boolean
+        default: false
       dry_run:
         description: Render only, no upload
         type: boolean
@@ -19,7 +23,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   guard:
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || inputs.auto
     runs-on: ubuntu-latest
     outputs:
       go: ${{ steps.g.outputs.go }}
@@ -33,7 +37,7 @@ jobs:
         run: python3 .github/slot_guard.py
   make:
     needs: guard
-    if: always() && (github.event_name != 'schedule' || needs.guard.outputs.go == '1')
+    if: always() && ((github.event_name != 'schedule' && !inputs.auto) || needs.guard.outputs.go == '1')
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -57,7 +61,7 @@ jobs:
           YT_PRIVACY: ${{ vars.YT_PRIVACY }}
         run: |
           ARGS=""
-          if [ "${{ github.event_name }}" != "schedule" ] && [ "${{ inputs.dry_run }}" = "true" ]; then ARGS="--dry-run"; fi
+          if [ "${{ github.event_name }}" != "schedule" ] && [ "${{ inputs.auto }}" != "true" ] && [ "${{ inputs.dry_run }}" = "true" ]; then ARGS="--dry-run"; fi
           if [ -n "${{ inputs.kind }}" ]; then ARGS="$ARGS --kind ${{ inputs.kind }}"; fi
           python youtube/realcost_long.py $ARGS
       - uses: actions/upload-artifact@v4
