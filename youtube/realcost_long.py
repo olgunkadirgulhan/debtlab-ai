@@ -264,7 +264,7 @@ def main():
         import upload
         today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
         cnt = sum(1 for r in csv.DictReader(LONG_LOG.open(encoding='utf-8')) if r['date_utc'].startswith(today)) if LONG_LOG.exists() else 0
-        if cnt >= int(os.environ.get('LONG_PER_DAY') or 2):
+        if cnt >= int(os.environ.get('LONG_PER_DAY') or 1):
             print(f'günlük uzun video sınırı dolu ({cnt})'); return
         print('kanal:', upload.check_channel())
     D = R.load_data(); rnd = random.Random()

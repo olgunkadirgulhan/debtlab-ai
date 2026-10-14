@@ -28,7 +28,7 @@ jobs:
       - id: g
         env:
           LOG_FILE: youtube/published_long.csv
-          SLOTS: "15:00,21:00"
+          SLOTS: "18:30"
           MIN_GAP_MIN: "120"
         run: python3 .github/slot_guard.py
   make:
