@@ -45,3 +45,4 @@ topic_id,date_utc,video_id,privacy,pillar,title,script_source
 49,2026-10-12 20:26,etg3CPlVm-E,public,money_choice,a $2 coffee at home vs a $7 coffee every day: which is more money?,gemini
 44,2026-10-13 20:26,1NvJJsizIsM,public,two_friends,"Credit card debt payoff: minimum vs $225 a month on $5,500",gemini
 rc:aprladder:10000,2026-10-14 11:14,EJDr1QqvAQE,public,real_cost_aprladder,"$10,000 for 3 Years at 0% to 22% APR",realcost
+rc:spendshare:health care,2026-10-14 17:24,KP9rZmkYoDQ,public,real_cost_spendshare,How Much of Every $100 Goes to Health Care?,realcost
