@@ -67,7 +67,7 @@ def fred(series):
 
 
 def bls_ce():
-    ids = [s for s, _ in CE.values()]
+    ids = [s for s, _ in CE.values()] + ['CXUTOTALEXPLB0101M']   # + toplam harcama (pay hesabı için)
     r = requests.post('https://api.bls.gov/publicAPI/v1/timeseries/data/', json={'seriesid': ids}, timeout=40).json()
     out = {}
     for s in r['Results']['series']:
@@ -91,6 +91,10 @@ def load_data():
     except Exception as e: log(f'  BLS CE çekilemedi ({e}); eski değer')
     DATA.write_text(json.dumps(new, indent=1))
     return new
+
+
+def load_cached():
+    return json.loads(DATA.read_text()) if DATA.exists() else load_data()
 
 
 def month_name(d):
@@ -145,11 +149,18 @@ HOME_P = list(range(225000, 900000, 25000))
 LOAN_P = [3000, 5000, 7500, 10000, 15000, 20000, 25000, 30000]
 
 
-def pick(rnd, fmt=None):
+def pick(rnd, fmt=None, D=None):
+    import realcost_more as RM
     done = done_keys(); last = recent_fmts()
-    fmts = ['card', 'car', 'home', 'loan', 'spend', 'work', 'savings']
-    for _ in range(800):
-        f = fmt or rnd.choice([x for x in fmts if x not in last[-2:]] or fmts)
+    fmts = ['card', 'car', 'home', 'loan', 'spend', 'work', 'savings'] + RM.KURGU
+    for _ in range(3000):
+        f = fmt or rnd.choice([x for x in fmts if x not in last[-4:]] or fmts)
+        if f in RM.KURGU:
+            key = RM.key_for(f, rnd, D or load_cached())
+            if key is None: continue
+            tid = 'rc:' + ':'.join(str(k) for k in key)
+            if tid not in done: return key, tid
+            continue
         if f == 'card': key = [f, rnd.choice(CARD_BAL), rnd.choice([1.5, 2, 3, 4])]
         elif f == 'car': key = [f, rnd.choice(CAR_P), rnd.choice([60, 72, 84])]
         elif f == 'home': key = [f, rnd.choice(HOME_P)]
@@ -181,6 +192,8 @@ def interest_of(kind, amt, D):
 
 
 def build(key, D, rnd):
+    import realcost_more as RM
+    if key[0] in RM.KURGU: return RM.build(key, D, rnd)
     f = key[0]
     if f == 'card':
         bal, mult = key[1], key[2]; apr = D['card']['value']
@@ -492,9 +505,10 @@ def main():
     D = load_data(); rnd = random.Random()
     OUT.mkdir(parents=True, exist_ok=True)
     for i in range(n):
-        key, tid = pick(rnd, fmt); v = build(key, D, rnd)
+        key, tid = pick(rnd, fmt, D); v = build(key, D, rnd)
         log(f'[realcost] {tid} → {v["title"]}')
-        mp4 = render(v, OUT / f'{datetime.now(timezone.utc):%Y-%m-%d}_{i}.mp4')
+        import realcost_more as RM
+        mp4 = (RM.render if 'scenes' in v else render)(v, OUT / f'{datetime.now(timezone.utc):%Y-%m-%d}_{i}.mp4')
         if DRY:
             log(f'  [dry-run] {mp4}\n{v["desc"]}'); continue
         vid = upload.upload(mp4, v['title'] + ' #Shorts', v['desc'], v['tags'], privacy)
