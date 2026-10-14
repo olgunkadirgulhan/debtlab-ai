@@ -324,6 +324,8 @@ F = R.font
 
 def frame(base, v, bi, t, dur):
     img = base.copy(); d = ImageDraw.Draw(img); sc = v['scenes'][bi]; T = sc['t']; a = R.ease(t / 1.2)
+    prev = v['scenes'][bi - 1] if bi else {}
+    if prev.get('t') == T and all(prev.get(x) == sc.get(x) for x in ('lab', 'v', 'tot', 'i')) and T != 'bars': a = 1.0   # aynı rakam: tekrar sayma
     if T == 'tag':
         d.text((W // 2, 420), sc['sub'], font=F(R.ANTON, 96 if len(sc['sub']) < 18 else 70), fill=R.WHITE, anchor='mm')
         tg = R.price_tag(sc['top'], sc['v'], 6 * math.sin(t * 2.2) * math.exp(-t * 0.8)); img.paste(tg, (W // 2 - tg.width // 2, 600), tg)
@@ -336,7 +338,7 @@ def frame(base, v, bi, t, dur):
     elif T == 'bars':
         rows = sc['rows']; mx = max(b + e for _, b, e, _ in rows) or 1; n = sc['n']
         for i, (lab, b, e, right) in enumerate(rows[:n]):
-            k = a if i == n - 1 and not sc.get('cta') else 1.0
+            k = a if (i == n - 1 and not sc.get('cta') and prev.get('n') != n) else 1.0
             y = 1000 - len(rows) * 105 + i * 210; full = 920
             d.text((80, y), lab, font=F(R.MONT, 38), fill=R.WHITE)
             d.text((W - 80, y), right, font=F(R.ANTON, 56), fill=R.WHITE, anchor='ra')
