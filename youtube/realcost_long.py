@@ -217,7 +217,10 @@ def frame(base, v, bi, t):
     if any(r['extra'] > 0 for r in rows) and bi >= 2:
         d.rectangle([520, 885, 548, 913], fill=R.GREY); d.text((560, 899), 'PRICE', font=F(R.MONT, 26), fill=R.DIM, anchor='lm')
         d.rectangle([700, 885, 728, 913], fill=R.ORANGE); d.text((740, 899), 'INTEREST', font=F(R.MONT, 26), fill=R.DIM, anchor='lm')
-    f = F(R.MONT, 36); ls = R.wrap(d, v['beats'][bi], f, 1700)[:2]
+    f = F(R.MONT, 36); allx = R.wrap(d, v['beats'][bi], f, 1700)
+    groups = [allx[i:i + 2] for i in range(0, len(allx), 2)] or [[]]
+    dur = v.get('durs', [0] * (bi + 1))[bi] or 1
+    ls = groups[min(len(groups) - 1, int(t / dur * len(groups)))]
     for j, l in enumerate(ls):
         d.text((W // 2, 960 + j * 46), l, font=f, fill=R.WHITE, anchor='mm')
     return img
@@ -237,14 +240,16 @@ def render(v, mp4):
     p = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
                           '-i', str(tmp / 'voice.wav'), '-c:v', 'libx264', '-preset', 'medium', '-crf', '21', '-pix_fmt', 'yuv420p',
                           '-c:a', 'aac', '-b:a', '160k', '-shortest', '-movflags', '+faststart', str(mp4)], stdin=subprocess.PIPE)
+    v['durs'] = durs
     for i, dd in enumerate(durs):
-        last = None
+        cache = {}
         for k in range(int(dd * FPS)):
             t = k / FPS
-            if t > 1.2 and last is not None:                       # animasyon bitti: aynı kareyi tekrar yaz (hız)
-                p.stdin.write(last); continue
+            ck = int(t / dd * 50)                                  # altyazı parçası değişince yeniden çiz
+            if t > 1.2 and ck in cache:                            # animasyon bitti: aynı kareyi tekrar yaz (hız)
+                p.stdin.write(cache[ck]); continue
             fr = frame(base, v, i, t).tobytes()
-            if t > 1.15: last = fr
+            if t > 1.15: cache = {ck: fr}
             p.stdin.write(fr)
     p.stdin.close(); p.wait()
     if p.returncode: raise RuntimeError('ffmpeg hata')
