@@ -50,6 +50,13 @@ def log(m): print(m, flush=True)
 def money(v): return f'${v:,.0f}' if v >= 100 else f'${v:,.2f}'
 
 
+def say(v):
+    """Seslendirme için: büyük tutarlar yuvarlanır (ekranda tam rakam)."""
+    if v >= 1e6: return f'about {v / 1e6:.1f} million dollars'
+    if v >= 1e5: return f'about {round(v / 1000):,} thousand dollars'.replace(',', '')
+    return money(v)
+
+
 # ---------------------------------------------------------------- veri
 def fred(series):
     r = requests.get(f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}', timeout=30)
@@ -150,9 +157,8 @@ def build(key, D, rnd):
         hook = rnd.choice([f'{money(bal)} on a credit card. Here is what it really costs if you only pay the minimum.',
                            f'You owe {money(bal)} on a credit card. The minimum payment looks small. Watch what it really costs.'])
         beats = [hook,
-                 f'The average card rate on accounts that pay interest is {apr:.2f} percent, according to the Federal Reserve. '
-                 f'Your first minimum is about {money(first)}.',
-                 f'Paying only the minimum takes {yrs(m1)}, and you pay {money(p1)} in total.',
+                 f'Average card rate: {apr:.2f} percent, per the Federal Reserve. First minimum: about {money(first)}.',
+                 f'Paying only the minimum takes {yrs(m1)}, and you pay {say(p1)} in total.',
                  f'Pay a fixed {money(fixed)} a month instead and it is gone in {yrs(m2)}, for {money(p2)}. '
                  f'That saves {money(p1 - p2)}.',
                  rnd.choice(['How much do you pay on your card each month? Tell me below.',
@@ -176,8 +182,7 @@ def build(key, D, rnd):
                      bars=[(f'{n0} MONTHS · {money(pay0)}/MO', p, t0 - p, money(t0)), (f'{n1} MONTHS · {money(pay1)}/MO', p, t1 - p, money(t1))])
             beats = [rnd.choice([f'A {money(p)} car. That is the sticker price. Here is the real cost.',
                                  f'You finance a {money(p)} car. Here is what you really pay.']),
-                     f'The average new car loan rate is {apr:.2f} percent, according to the Federal Reserve. '
-                     f'Over {n0} months that is {money(pay0)} a month.',
+                     f'Average new car loan rate: {apr:.2f} percent, per the Federal Reserve. Over {n0} months: {money(pay0)} a month.',
                      f'In total you pay {money(t0)}. That is {money(t0 - p)} just in interest.',
                      f'Stretch it to {n1} months and the payment drops to {money(pay1)}, but the total climbs to {money(t1)}. '
                      f'That is {money(t1 - t0)} more.',
@@ -195,8 +200,7 @@ def build(key, D, rnd):
                      bars=[(f'PERSONAL LOAN · {apr:.1f}%', p, t0 - p, money(t0)), (f'CREDIT CARD · {capr:.1f}%', p, tc - p, money(tc))])
             beats = [rnd.choice([f'You borrow {money(p)}. Here is what it really costs.',
                                  f'{money(p)} borrowed for two years. Here is the real cost.']),
-                     f'The average 24 month personal loan rate is {apr:.2f} percent, according to the Federal Reserve. '
-                     f'That is {money(pay0)} a month.',
+                     f'Average two year personal loan rate: {apr:.2f} percent, per the Federal Reserve. That is {money(pay0)} a month.',
                      f'You pay back {money(t0)} in total, so {money(t0 - p)} is interest.',
                      f'Put the same {money(p)} on a credit card at {capr:.2f} percent and pay it off in 24 months, and it costs '
                      f'{money(tc)}. That is {money(tc - t0)} more.',
@@ -216,10 +220,9 @@ def build(key, D, rnd):
                  bars=[(f'30 YEARS · {money(p30)}/MO', price, t30 - price, money(t30)), (f'15 YEARS · {money(p15)}/MO', price, t15 - price, money(t15))])
         beats = [rnd.choice([f'A {money(price)} house. Here is what it really costs with a mortgage.',
                              f'The house is listed at {money(price)}. That is not what you pay.']),
-                 f'With 20 percent down and a 30 year mortgage at {a30:.2f} percent, the average rate from Freddie Mac, '
-                 f'the payment is {money(p30)} a month.',
-                 f'Over 30 years you pay {money(t30)} for the house, before taxes and insurance.',
-                 f'A 15 year loan at {a15:.2f} percent costs {money(p15)} a month, but {money(t15)} in total. That is {money(t30 - t15)} less.',
+                 f'20 percent down, 30 years at {a30:.2f} percent, the Freddie Mac average. That is {money(p30)} a month.',
+                 f'Over 30 years you pay {say(t30)}, before taxes and insurance.',
+                 f'A 15 year loan at {a15:.2f} percent is {money(p15)} a month, but {say(t15)} in total. You save {say(t30 - t15)}.',
                  '15 or 30 years: which would you pick? Tell me below.']
         title = rnd.choice([f'The Real Cost of a {money(price)} House (30 vs 15 Year Mortgage)',
                             f'{money(price)} House: What You Really Pay Over 30 Years'])
@@ -235,7 +238,7 @@ def build(key, D, rnd):
                  bars=[('10 YEARS', a * 10, 0, money(a * 10)), ('30 YEARS', a * 30, 0, money(a * 30))])
         beats = [rnd.choice([f'The average American household spends {money(a)} a year on {cat}.',
                              f'How much does {cat} really cost? The average household spends {money(a)} a year.']),
-                 f'That is {money(a / 365)} a day, or {money(a / 12)} a month, according to the Bureau of Labor Statistics.',
+                 f'That is {money(a / 365)} a day, or {money(a / 12)} a month, per the Bureau of Labor Statistics.',
                  f'Over 10 years that adds up to {money(a * 10)}, even if prices never went up.',
                  f'Over 30 years it is {money(a * 30)}.',
                  f'Do you spend more or less than {money(a / 12)} a month on {cat}? Tell me below.']
@@ -338,14 +341,14 @@ def frame(base, v, bi, t, beat_txt):
 
 # ---------------------------------------------------------------- ses + video
 def render(v, mp4):
+    os.environ.setdefault('TTS_SPEED', '1.15')
     import tts
     tmp = mp4.with_suffix(''); tmp.mkdir(parents=True, exist_ok=True)
     parts, durs, sr = [], [], 24000
     for i, b in enumerate(v['beats']):
         wav = tmp / f'b{i}.wav'; tts.synthesize(b, str(wav))
         a, sr = sf.read(str(wav), dtype='float32')
-        a = np.concatenate([a, np.zeros(int(0.35 * sr), dtype=np.float32)])
-        if i == 2: a = np.concatenate([a, np.zeros(int(0.4 * sr), dtype=np.float32)])   # sayaç bitsin
+        a = np.concatenate([a, np.zeros(int(0.25 * sr), dtype=np.float32)])
         parts.append(a); durs.append(len(a) / sr)
     sf.write(str(tmp / 'voice.wav'), np.concatenate(parts), sr)
     base = background()
