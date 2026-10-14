@@ -260,6 +260,10 @@ def main():
     a = sys.argv[1:]
     kind = a[a.index('--kind') + 1] if '--kind' in a else None
     privacy = os.environ.get('YT_PRIVACY', 'private')
+    if not DRY and '--kind' not in a:
+        long_days = (os.environ.get('LONG_DAYS') or 'mon,wed,fri').split(',')   # 2026-10-14: haftada 3 uzun
+        if datetime.now(timezone.utc).strftime('%a').lower()[:3] not in long_days:
+            print('bugün uzun video günü değil'); return
     if not DRY:
         import upload
         today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
