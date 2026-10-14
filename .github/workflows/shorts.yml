@@ -14,6 +14,10 @@ on:
         description: External scheduler call - follow the slot plan like a scheduled run
         type: boolean
         default: false
+      dry_run:
+        description: Render only, no upload (realcost mode)
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -65,13 +69,21 @@ jobs:
           YT_CHANNEL_ID: ${{ secrets.YT_CHANNEL_ID }}
           YT_PRIVACY: ${{ vars.YT_PRIVACY }}
           MAX_PER_DAY: ${{ vars.MAX_PER_DAY }}
-        run: python youtube/run.py
+        run: |
+          # CONTENT_MODE=realcost → "The Real Cost" (2026-10-14); boşsa eski DebtLab akışı
+          if [ "${{ vars.CONTENT_MODE }}" = "realcost" ] || [ "${{ inputs.dry_run }}" = "true" ]; then
+            python youtube/realcost.py ${{ inputs.dry_run && '--dry-run' || '' }}
+          else
+            python youtube/run.py
+          fi
       - name: Keep video for review
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: shorts-${{ github.run_id }}
-          path: youtube/out/*/video.mp4
+          path: |
+            youtube/out/*/video.mp4
+            youtube/out/realcost/*.mp4
           retention-days: 5
           if-no-files-found: ignore
       - name: Commit log
@@ -82,7 +94,7 @@ jobs:
           git config user.name "debtlab-bot"
           git config user.email "bot@users.noreply.github.com"
           git add -A youtube/queue/ || true
-          git add youtube/published.csv || true
+          git add youtube/published.csv youtube/realcost_data.json || true
           git diff --cached --quiet && exit 0
           git commit -m "short: $(date -u +%F-%H%M)"
           git pull --rebase

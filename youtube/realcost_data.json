@@ -1,0 +1,60 @@
+{
+ "card": {
+  "value": 22.36,
+  "date": "2026-08-01"
+ },
+ "car": {
+  "value": 7.47,
+  "date": "2026-08-01"
+ },
+ "loan": {
+  "value": 11.9,
+  "date": "2026-08-01"
+ },
+ "m30": {
+  "value": 7.4,
+  "date": "2026-10-08"
+ },
+ "m15": {
+  "value": 6.73,
+  "date": "2026-10-08"
+ },
+ "ce": {
+  "CXUFOODAWAYLB0101M": {
+   "value": 3945.0,
+   "year": "2024"
+  },
+  "CXUFOODHOMELB0101M": {
+   "value": 6224.0,
+   "year": "2024"
+  },
+  "CXUENTRTAINLB0101M": {
+   "value": 3609.0,
+   "year": "2024"
+  },
+  "CXUAPPARELLB0101M": {
+   "value": 2001.0,
+   "year": "2024"
+  },
+  "CXUALCBEVGLB0101M": {
+   "value": 643.0,
+   "year": "2024"
+  },
+  "CXUPETSLB0101M": {
+   "value": 880.0,
+   "year": "2024"
+  },
+  "CXUPERSCARELB0101M": {
+   "value": 978.0,
+   "year": "2024"
+  },
+  "CXUHEALTHLB0101M": {
+   "value": 6197.0,
+   "year": "2024"
+  },
+  "CXUTOBACCOLB0101M": {
+   "value": 352.0,
+   "year": "2024"
+  }
+ }
+}
