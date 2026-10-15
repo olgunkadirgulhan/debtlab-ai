@@ -48,3 +48,4 @@ rc:aprladder:10000,2026-10-14 11:14,EJDr1QqvAQE,public,real_cost_aprladder,"$10,
 rc:spendshare:health care,2026-10-14 17:24,KP9rZmkYoDQ,public,real_cost_spendshare,How Much of Every $100 Goes to Health Care?,realcost
 rc:extramortgage:600000,2026-10-14 20:16,CHXpsAXIUXY,public,real_cost_extramortgage,"$100 Extra a Month on a $600,000 Mortgage: Years Saved",realcost
 rc:payoffgoal:2500,2026-10-14 23:20,PYfKwpTIKdQ,public,real_cost_payoffgoal,"How to Pay Off $2,500 of Card Debt in 1, 2 or 3 Years",realcost
+rc:fourways:20000,2026-10-15 16:24,ajVlQfPx2VU,public,real_cost_fourways,"The Same $20,000 at 4 Different Rates: Real Cost",realcost
