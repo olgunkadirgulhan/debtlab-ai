@@ -55,3 +55,4 @@ rc:perday:5000,2026-10-15 23:08,NSSgrRoE3y8,public,real_cost_perday,"What a $5,0
 rc:carbudget:600,2026-10-16 16:24,duLea9kWEeo,public,real_cost_carbudget,How Much Car Does $600 a Month Buy?,realcost
 rc:aprquiz:2026-08,2026-10-16 17:24,pP73jI2lZ1c,public,real_cost_aprquiz,What Is the Average Credit Card Interest Rate Right Now?,realcost
 rc:higherlower:24000:6500,2026-10-16 20:24,qhjBekM9jkQ,public,real_cost_higherlower,"More Interest: $24,000 Car Loan or $6,500 on a Card?",realcost
+rc:halflife:100000,2026-10-16 22:55,bY7U1dwKTuE,public,real_cost_halflife,"How Long Until Inflation Halves $100,000?",realcost
