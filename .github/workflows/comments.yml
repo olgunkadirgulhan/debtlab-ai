@@ -28,15 +28,15 @@ jobs:
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
-          CHANNEL_NAME: "DebtLab"
-          CHANNEL_ABOUT: "Short personal-finance explainers with simple math: credit cards, interest, everyday money choices. Education only, not financial advice."
+          CHANNEL_NAME: "The Real Cost"
+          CHANNEL_ABOUT: "Shorts that show what things really cost once interest and time are added (cards, car loans, mortgages, savings), using Federal Reserve and BLS data. Education only, not financial advice."
           CHANNEL_KIND: finance
           CHANNEL_LANG: en
           STATE_FILE: comment_replies.json
           MAX_REPLIES_PER_DAY: "45"
           REQUESTS_FILE: viewer_requests.json
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          FIRST_QUESTIONS: "[\"Which option would you pick? 🤔\", \"Did this number surprise you? 😮\", \"What money topic should we explain next? 💡\", \"Did you know how this works before? 📚\", \"Which part was most useful? 👇\", \"What should we calculate next? 🧮\"]"
+          FIRST_QUESTIONS: "[\"Did this number surprise you? 😮\", \"Which option would you pick? 🤔\", \"What should we calculate next? 💡\", \"Did you expect the total to be that high? 📈\", \"What rate are you seeing right now? 👇\", \"Which real cost should we show next: car, house or card? 🏠\", \"Did you know this before? 🤔\"]"
         run: python tools/auto_reply.py
       - run: |
           git config user.name "comment-bot"
