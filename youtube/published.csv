@@ -66,3 +66,4 @@ rc:ratebump:750000,2026-10-18 20:24,3tIqBAEJ87k,public,real_cost_ratebump,"What 
 rc:loan:30000,2026-10-18 23:24,-g8Tntj9LIM,public,real_cost_loan,"The Real Cost of Borrowing $30,000: Personal Loan vs Credit Card",realcost
 rc:aprladder:15000,2026-10-19 16:24,Q3Lw1sAC8II,public,real_cost_aprladder,"$15,000 for 3 Years at 0% to 22% APR",realcost
 rc:mintimequiz:1500,2026-10-19 17:25,lbbVQBov-b4,public,real_cost_mintimequiz,"Minimum Payments on $1,500: How Long? Most People Guess Wrong",realcost
+rc:homebudget:2200,2026-10-19 20:25,EPjJQsem_ws,public,real_cost_homebudget,"What House Can $2,200 a Month Buy at Today's Rates?",realcost
