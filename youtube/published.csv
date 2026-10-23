@@ -82,3 +82,4 @@ rc:perday:15000,2026-10-22 20:53,0sI80MvwbKI,public,real_cost_perday,"What a $15
 rc:payoffgoal:10000,2026-10-22 23:24,y_7NVxw_6Sg,public,real_cost_payoffgoal,"How to Pay Off $10,000 of Card Debt in 1, 2 or 3 Years",realcost
 rc:spend:personal care,2026-10-23 17:24,CxXag3gwP-I,public,real_cost_spend,The Real Cost of Personal Care: $978 a Year 💇,realcost
 rc:savings:50000:1,2026-10-23 18:24,-Af1MtxELfk,public,real_cost_savings,"$50,000 in Savings: What It Is Really Worth in 1 Year",realcost
+rc:higherlower:20000:20000,2026-10-23 20:59,ZVuUZfA7GvM,public,real_cost_higherlower,"More Interest: $20,000 Car Loan or $20,000 on a Card?",realcost
