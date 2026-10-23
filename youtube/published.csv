@@ -80,3 +80,4 @@ rc:card:3500:2,2026-10-22 16:24,p4wi_BIGYB0,public,real_cost_card,"$3,500 on a C
 rc:spendhours:alcohol,2026-10-22 17:25,57pMqZCS2kY,public,real_cost_spendhours,Hours of Work a Year to Pay for Alcohol,realcost
 rc:perday:15000,2026-10-22 20:53,0sI80MvwbKI,public,real_cost_perday,"What a $15,000 Card Balance Costs You Every Day",realcost
 rc:payoffgoal:10000,2026-10-22 23:24,y_7NVxw_6Sg,public,real_cost_payoffgoal,"How to Pay Off $10,000 of Card Debt in 1, 2 or 3 Years",realcost
+rc:spend:personal care,2026-10-23 17:24,CxXag3gwP-I,public,real_cost_spend,The Real Cost of Personal Care: $978 a Year 💇,realcost
