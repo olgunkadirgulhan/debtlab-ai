@@ -84,3 +84,4 @@ rc:spend:personal care,2026-10-23 17:24,CxXag3gwP-I,public,real_cost_spend,The R
 rc:savings:50000:1,2026-10-23 18:24,-Af1MtxELfk,public,real_cost_savings,"$50,000 in Savings: What It Is Really Worth in 1 Year",realcost
 rc:higherlower:20000:20000,2026-10-23 20:59,ZVuUZfA7GvM,public,real_cost_higherlower,"More Interest: $20,000 Car Loan or $20,000 on a Card?",realcost
 rc:yearsofwork:675000,2026-10-23 23:15,ALsnsSsKDOU,public,real_cost_yearsofwork,"A $675,000 House in Years of Work",realcost
+rc:truefalse:6500:3,2026-10-24 16:24,RQzfU5QdHUA,public,real_cost_truefalse,"True or False: $6,500 at the Minimum Is Paid Off in 3 Years",realcost
