@@ -38,7 +38,7 @@ jobs:
       - id: g
         env:
           LOG_FILE: youtube/published.csv
-          SLOTS: "14:00,17:00,20:00,22:45"
+          SLOTS: "16:00,19:00,21:30"   # 2026-10-25: günde 3 Short (en iyi saatler 18-21 UTC)
         run: python3 .github/slot_guard.py
 
   make-and-upload:

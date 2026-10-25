@@ -14,9 +14,10 @@ import json
 import math
 import os
 import random
+import re
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import numpy as np
@@ -149,12 +150,50 @@ HOME_P = list(range(225000, 900000, 25000))
 LOAN_P = [3000, 5000, 7500, 10000, 15000, 20000, 25000, 30000]
 
 
+def tkey(t):
+    return ' '.join(re.sub(r'[^a-z0-9 ]', ' ', re.sub(r'#\w+', ' ', t.lower())).split())
+
+
+_KW = None
+
+
+def fmt_weights():
+    """2026-10-25: format seçimi kanalın kendi izlenmesine göre (≥24 saatlik Shorts'ların format medyanı / genel medyan).
+    Veri yoksa hepsi 1; hiç denenmemiş format 1.5 (keşif). Sınırlar 0.3-4."""
+    global _KW
+    if _KW is not None: return _KW
+    _KW = {}
+    try:
+        if not PUBLISHED.exists() or not os.environ.get('YT_REFRESH_TOKEN'): return _KW
+        cut = (datetime.now(timezone.utc) - timedelta(hours=24)).strftime('%Y-%m-%d %H:%M')
+        sh = [r for r in csv.DictReader(PUBLISHED.open(encoding='utf-8')) if r['topic_id'].startswith('rc:') and r['date_utc'] < cut and r['video_id']]
+        if not sh: return _KW
+        import statistics as st, upload
+        api = upload._client(); views = {}
+        for i in range(0, len(sh), 50):
+            for it in api.videos().list(part='statistics', id=','.join(r['video_id'] for r in sh[i:i + 50])).execute().get('items', []):
+                views[it['id']] = int(it['statistics'].get('viewCount', 0))
+        by = {}
+        for r in sh:
+            if r['video_id'] in views: by.setdefault(r['topic_id'].split(':')[1], []).append(views[r['video_id']])
+        allv = [v for vs in by.values() for v in vs]
+        if not allv: return _KW
+        m = st.median(allv)
+        _KW = {k: max(0.3, min(4.0, (st.median(vs) + 10) / (m + 10))) for k, vs in by.items()}
+        log('format ağırlıkları: ' + ', '.join(f'{k}={w:.2f}' for k, w in sorted(_KW.items(), key=lambda x: -x[1])))
+    except Exception as e:
+        log(f'format ağırlıkları alınamadı: {e}')
+    return _KW
+
+
 def pick(rnd, fmt=None, D=None):
     import realcost_more as RM
     done = done_keys(); last = recent_fmts()
     fmts = ['card', 'car', 'home', 'loan', 'spend', 'work', 'savings'] + RM.KURGU
+    kw = fmt_weights()
     for _ in range(3000):
-        f = fmt or rnd.choice([x for x in fmts if x not in last[-4:]] or fmts)
+        pool = [x for x in fmts if x not in last[-4:]] or fmts
+        f = fmt or rnd.choices(pool, weights=[kw.get(x, 1.5 if kw else 1) for x in pool])[0]
         if f in RM.KURGU:
             key = RM.key_for(f, rnd, D or load_cached())
             if key is None: continue
@@ -505,7 +544,13 @@ def main():
     D = load_data(); rnd = random.Random()
     OUT.mkdir(parents=True, exist_ok=True)
     for i in range(n):
-        key, tid = pick(rnd, fmt, D); v = build(key, D, rnd)
+        # 2026-10-25: aynı başlık iki kez yüklenmez (tekrar eden başlıkları YouTube dağıtmıyor)
+        seen = {tkey(r['title']) for r in csv.DictReader(PUBLISHED.open(encoding='utf-8'))} if PUBLISHED.exists() else set()
+        for _ in range(25):
+            key, tid = pick(rnd, fmt, D); v = build(key, D, rnd)
+            if tkey(v['title']) not in seen: break
+        else:
+            raise SystemExit('25 denemede yeni başlık bulunamadı')
         log(f'[realcost] {tid} → {v["title"]}')
         import realcost_more as RM
         mp4 = (RM.render if 'scenes' in v else render)(v, OUT / f'{datetime.now(timezone.utc):%Y-%m-%d}_{i}.mp4')
