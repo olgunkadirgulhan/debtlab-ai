@@ -90,3 +90,4 @@ rc:card:10000:1.5,2026-10-24 20:25,5y6hpYf-XSY,public,real_cost_card,"The Real C
 rc:spendhours:eating out,2026-10-24 23:24,4XA6UYGFWAU,public,real_cost_spendhours,Hours of Work a Year to Pay for Eating Out,realcost
 rc:yearsofwork:625000,2026-10-25 16:24,258UdVkKwLo,public,real_cost_yearsofwork,"A $625,000 House in Years of Work",realcost
 rc:home:350000,2026-10-25 19:09,voXuFKXPVAo,public,real_cost_home,"$350,000 House: What You Really Pay Over 30 Years",realcost
+rc:homebudget:1500,2026-10-25 21:56,jO8IYY2gn3o,public,real_cost_homebudget,"What House Can $1,500 a Month Buy at Today's Rates?",realcost
