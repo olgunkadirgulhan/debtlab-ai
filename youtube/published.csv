@@ -95,3 +95,4 @@ rc:ratechange:5000,2026-10-26 17:00,8Ht1F8KrVt8,public,real_cost_ratechange,"Car
 rc:spendvs:alcohol:health care,2026-10-26 20:24,hXYe9Qn19Y4,public,real_cost_spendvs,Alcohol vs Health Care: Where Households Spend More,realcost
 rc:fourways:25000,2026-10-26 22:24,opCasvdrUiI,public,real_cost_fourways,"The Same $25,000 at 4 Different Rates: Real Cost",realcost
 rc:firstpayment:300000,2026-10-27 16:24,jjerZmXI82s,public,real_cost_firstpayment,"Where Your First Mortgage Payment Goes ($300,000 House)",realcost
+rc:mortgageyearago:700000,2026-10-27 19:31,UYaTPye-vH0,public,real_cost_mortgageyearago,"$700,000 House: Mortgage Payment a Year Ago vs Today",realcost
