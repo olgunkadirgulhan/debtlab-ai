@@ -97,3 +97,4 @@ rc:fourways:25000,2026-10-26 22:24,opCasvdrUiI,public,real_cost_fourways,"The Sa
 rc:firstpayment:300000,2026-10-27 16:24,jjerZmXI82s,public,real_cost_firstpayment,"Where Your First Mortgage Payment Goes ($300,000 House)",realcost
 rc:mortgageyearago:700000,2026-10-27 19:31,UYaTPye-vH0,public,real_cost_mortgageyearago,"$700,000 House: Mortgage Payment a Year Ago vs Today",realcost
 rc:halflife:50000,2026-10-27 22:25,OgXxgpY9acQ,public,real_cost_halflife,"How Long Until Inflation Halves $50,000?",realcost
+rc:home:800000,2026-10-28 16:25,VMBDt9mdnTA,public,real_cost_home,"What a $800,000 Home Really Costs at Today's Rates",realcost
