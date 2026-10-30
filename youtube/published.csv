@@ -104,3 +104,4 @@ rc:carbudget:500,2026-10-29 16:24,-F_7chSRPJ0,public,real_cost_carbudget,How Muc
 rc:termladder:5000,2026-10-29 19:25,dPii_c1eb2M,public,real_cost_termladder,"$5,000 Personal Loan: 12 vs 24 vs 36 vs 48 vs 60 Months",realcost
 rc:mortgageyearago:500000,2026-10-29 22:25,mOzIhalzHUE,public,real_cost_mortgageyearago,"$500,000 House: Mortgage Payment a Year Ago vs Today",realcost
 rc:aprladder:25000,2026-10-30 16:25,OIpDiLeiMVM,public,real_cost_aprladder,"$25,000 for 3 Years at 0% to 22% APR",realcost
+rc:halflife:5000,2026-10-30 19:24,uHv6QXwuZ_Q,public,real_cost_halflife,"How Long Until Inflation Halves $5,000?",realcost
