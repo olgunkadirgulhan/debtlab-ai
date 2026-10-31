@@ -107,3 +107,4 @@ rc:aprladder:25000,2026-10-30 16:25,OIpDiLeiMVM,public,real_cost_aprladder,"$25,
 rc:halflife:5000,2026-10-30 19:24,uHv6QXwuZ_Q,public,real_cost_halflife,"How Long Until Inflation Halves $5,000?",realcost
 rc:higherlower:32000:10000,2026-10-30 22:25,uQscTQelxhU,public,real_cost_higherlower,"More Interest: $32,000 Car Loan or $10,000 on a Card?",realcost
 rc:car:60000:84,2026-10-31 16:24,dAj4vHvKq0A,public,real_cost_car,"$60,000 Car: 48 vs 84 Month Loan, Real Cost",realcost
+rc:yearsofwork:500000,2026-10-31 19:24,VSOCjGENUF4,public,real_cost_yearsofwork,"A $500,000 House in Years of Work",realcost
