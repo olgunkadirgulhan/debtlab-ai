@@ -110,3 +110,4 @@ rc:car:60000:84,2026-10-31 16:24,dAj4vHvKq0A,public,real_cost_car,"$60,000 Car: 
 rc:yearsofwork:500000,2026-10-31 19:24,VSOCjGENUF4,public,real_cost_yearsofwork,"A $500,000 House in Years of Work",realcost
 rc:extra50:3500,2026-10-31 22:24,eqi-SaOp1cA,public,real_cost_extra50,"$3,500 Card Debt: What $50 More a Month Saves",realcost
 rc:spendshare:clothes,2026-11-01 16:24,f2mF3t4tQ5Q,public,real_cost_spendshare,How Much of Every $100 Goes to Clothes?,realcost
+rc:termladder:10000,2026-11-01 19:24,U6WaLiQyRZY,public,real_cost_termladder,"$10,000 Personal Loan: 12 vs 24 vs 36 vs 48 vs 60 Months",realcost
