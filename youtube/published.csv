@@ -114,3 +114,4 @@ rc:termladder:10000,2026-11-01 19:24,U6WaLiQyRZY,public,real_cost_termladder,"$1
 rc:fourways:10000,2026-11-01 22:25,Zsqcm6hRA88,public,real_cost_fourways,"The Same $10,000 at 4 Different Rates: Real Cost",realcost
 rc:homebudget:2500,2026-11-02 16:24,K3udY_52J50,public,real_cost_homebudget,"What House Can $2,500 a Month Buy at Today's Rates?",realcost
 rc:carbudget:700,2026-11-02 19:24,a-JFN8hUvwc,public,real_cost_carbudget,How Much Car Does $700 a Month Buy?,realcost
+rc:mortgageyearago:325000,2026-11-02 22:24,gIrojRX-uwo,public,real_cost_mortgageyearago,"$325,000 House: Mortgage Payment a Year Ago vs Today",realcost
