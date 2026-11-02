@@ -38,7 +38,7 @@ jobs:
       - id: g
         env:
           LOG_FILE: youtube/published.csv
-          SLOTS: "19:00"   # 2026-11-02: kanal dağıtılmıyor (18 videonun 11i 0-3 izlenme) → isim değişene kadar günde 1
+          SLOTS: "16:00,19:00,21:30"   # 2026-11-02: kanal adı değişti (DebtLab → Real Cost) → yeniden günde 3
         run: python3 .github/slot_guard.py
 
   make-and-upload:
