@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""realcost_brand.py — kanalın "The Real Cost" kimliği (2026-10-14): banner, profil, açıklama, eski videoları gizleme.
+"""realcost_brand.py — kanalın kimliği: 2026-11-02'den beri "True Cost Math" (YouTube "The Real Cost" adını kabul etmedi;
+FDA'nın sigara karşıtı kampanyasının adı). İlk sürüm 2026-10-14: banner, profil, açıklama, eski videoları gizleme.
 
     python youtube/realcost_brand.py --make                # sadece görseller (youtube/assets/rc_*.png)
     python youtube/realcost_brand.py --apply [--hide-old]  # YouTube'a uygula (CI: brand.yml)
@@ -16,7 +17,7 @@ import realcost as R  # noqa: E402
 from PIL import Image, ImageDraw  # noqa: E402
 
 A = HERE / 'assets'
-DESCRIPTION = """The sticker price is never the real price.
+DESCRIPTION = """True Cost Math: the sticker price is never the real price.
 
 Each Short takes one price, a car, a house, a credit card balance, a loan or a yearly spending habit, and shows what it really costs once interest and time are added. The rates come from the Federal Reserve (via FRED) and Freddie Mac, and spending averages from the Bureau of Labor Statistics. They are pulled fresh for every video and the source is in every description.
 
@@ -25,7 +26,7 @@ New Shorts every day.
 Run your own numbers with the free calculators: https://debtlabai.com
 
 Educational only. Not financial advice."""
-KEYWORDS = ['the real cost', 'real cost', 'true cost', 'car loan', 'mortgage', 'credit card debt', 'minimum payment',
+KEYWORDS = ['true cost math', 'real cost', 'true cost', 'car loan', 'mortgage', 'credit card debt', 'minimum payment',
             'personal loan', 'interest', 'cost of living', 'personal finance', 'money', 'budget', 'debt']
 
 
@@ -37,7 +38,7 @@ def banner():
     cy = H // 2
     tag = R.price_tag('STICKER PRICE', '$30,000', -6)
     img.paste(tag, (W // 2 - 770, cy - tag.height // 2), tag)
-    d.text((W // 2 + 360, cy - 60), 'THE REAL COST', font=R.font(R.ANTON, 150), fill=R.WHITE, anchor='mm')
+    d.text((W // 2 + 360, cy - 60), 'TRUE COST MATH', font=R.font(R.ANTON, 150), fill=R.WHITE, anchor='mm')
     d.rounded_rectangle([W // 2 - 20, cy + 40, W // 2 + 420, cy + 100], radius=12, fill=R.GREY)
     d.rounded_rectangle([W // 2 + 410, cy + 40, W // 2 + 740, cy + 100], radius=12, fill=R.ORANGE)
     d.text((W // 2 + 360, cy + 160), 'PRICE  +  INTEREST  +  TIME', font=R.font(R.MONT, 40), fill=R.DIM, anchor='mm')
@@ -50,7 +51,7 @@ def profile():
     d.rounded_rectangle([150, 250, 650, 550], radius=24, fill=R.ORANGE)
     d.ellipse([190, 375, 240, 425], fill=R.BG)
     d.text((440, 400), '$', font=R.font(R.ANTON, 260), fill=R.BG, anchor='mm')
-    d.text((S // 2, 660), 'THE REAL COST', font=R.font(R.ANTON, 80), fill=R.WHITE, anchor='mm')
+    d.text((S // 2, 660), 'TRUE COST MATH', font=R.font(R.ANTON, 76), fill=R.WHITE, anchor='mm')
     img.save(A / 'rc_profile_800x800.png')
 
 

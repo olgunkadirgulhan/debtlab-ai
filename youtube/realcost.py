@@ -404,8 +404,8 @@ def build(key, D, rnd):
         src = f'Data: BLS Consumer Expenditure Survey ({c["year"]})'; cta = 'MORE OR LESS?'
     v.update(fmt=f, key=key, beats=beats, title=title[:95], src=src, cta=cta)
     v['desc'] = (title + '\n\n' + '\n'.join(facts) + '\n\nRun your own numbers: https://debtlabai.com\n\n'
-                 + src + '\n' + DISCLAIMER + '\n\n#Shorts #realcost #personalfinance #money')
-    v['tags'] = ['the real cost', 'real cost', 'personal finance', 'money', f, 'shorts']
+                 + src + '\n' + DISCLAIMER + '\n\n#Shorts #truecostmath #personalfinance #money')
+    v['tags'] = ['true cost math', 'real cost', 'personal finance', 'money', f, 'shorts']
     return v
 
 

@@ -313,9 +313,9 @@ def build(key, D, rnd):
         facts = [f'Savings rate {sav:.2f}% (FDIC national rate via FRED, {month_name(D["sav"]["date"])})', f'Inflation {inf:.1f}% (CPI-U, 12 months, BLS via FRED), assumed constant']
         src = 'Data: FDIC and BLS via FRED'
     beats = [b for b, _ in B]; scenes = [s for _, s in B]
-    desc = (title + '\n\n' + '\n'.join(facts) + '\n\nRun your own numbers: https://debtlabai.com\n\n' + src + '\n' + R.DISCLAIMER + '\n\n#Shorts #realcost #personalfinance #money')
+    desc = (title + '\n\n' + '\n'.join(facts) + '\n\nRun your own numbers: https://debtlabai.com\n\n' + src + '\n' + R.DISCLAIMER + '\n\n#Shorts #truecostmath #personalfinance #money')
     return dict(fmt=k, key=key, title=title[:95], desc=desc, beats=beats, scenes=scenes, src=src,
-                tags=['the real cost', 'personal finance', 'money', 'interest', k, 'shorts'])
+                tags=['true cost math', 'personal finance', 'money', 'interest', k, 'shorts'])
 
 
 # ---------------------------------------------------------------- sahneler

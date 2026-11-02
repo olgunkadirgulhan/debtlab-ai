@@ -179,9 +179,9 @@ def build(key, D, rnd):
         extra_beats = [why, summary, sens]
     beats = [intro, context] + [r['say'] for r in rows] + extra_beats + [outro]
     desc = (title + '\n\n' + '\n'.join(facts) + '\n\n' + '\n'.join(f'{r["label"].title()}: {money(r["price"] + r["extra"])} total ({r["sub"]})' for r in rows)
-            + '\n\nRun your own numbers: https://debtlabai.com\n\n' + R.DISCLAIMER + '\n\n#realcost #personalfinance #money')
+            + '\n\nRun your own numbers: https://debtlabai.com\n\n' + R.DISCLAIMER + '\n\n#truecostmath #personalfinance #money')
     return dict(key=key, subject=subject, rows=rows, beats=beats, title=title[:95], desc=desc,
-                tags=['the real cost', 'personal finance', 'money', 'interest', k.replace('_all', '')])
+                tags=['true cost math', 'personal finance', 'money', 'interest', k.replace('_all', '')])
 
 
 def background():
