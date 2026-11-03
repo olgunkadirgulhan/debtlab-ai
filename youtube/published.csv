@@ -117,3 +117,4 @@ rc:carbudget:700,2026-11-02 19:24,a-JFN8hUvwc,public,real_cost_carbudget,How Muc
 rc:mortgageyearago:325000,2026-11-02 22:24,gIrojRX-uwo,public,real_cost_mortgageyearago,"$325,000 House: Mortgage Payment a Year Ago vs Today",realcost
 rc:payoffgoal:6500,2026-11-03 16:24,qMXS_ZXUxzA,public,real_cost_payoffgoal,"How to Pay Off $6,500 of Card Debt in 1, 2 or 3 Years",realcost
 rc:spendshare:tobacco,2026-11-03 19:25,9_8FWxE5fbs,public,real_cost_spendshare,How Much of Every $100 Goes to Tobacco?,realcost
+rc:higherlower:40000:3500,2026-11-03 21:52,IzEIkoa1RZw,public,real_cost_higherlower,"More Interest: $40,000 Car Loan or $3,500 on a Card?",realcost
