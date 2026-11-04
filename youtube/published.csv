@@ -119,3 +119,4 @@ rc:payoffgoal:6500,2026-11-03 16:24,qMXS_ZXUxzA,public,real_cost_payoffgoal,"How
 rc:spendshare:tobacco,2026-11-03 19:25,9_8FWxE5fbs,public,real_cost_spendshare,How Much of Every $100 Goes to Tobacco?,realcost
 rc:higherlower:40000:3500,2026-11-03 21:52,IzEIkoa1RZw,public,real_cost_higherlower,"More Interest: $40,000 Car Loan or $3,500 on a Card?",realcost
 rc:aprladder:20000,2026-11-04 16:24,9uBrGeKsRSc,public,real_cost_aprladder,"$20,000 for 3 Years at 0% to 22% APR",realcost
+rc:home:450000,2026-11-04 19:24,7dYFi4s8YUU,public,real_cost_home,"What a $450,000 Home Really Costs at Today's Rates",realcost
