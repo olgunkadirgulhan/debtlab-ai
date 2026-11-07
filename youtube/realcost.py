@@ -193,7 +193,8 @@ def pick(rnd, fmt=None, D=None):
     kw = fmt_weights()
     for _ in range(3000):
         pool = [x for x in fmts if x not in last[-4:]] or fmts
-        f = fmt or rnd.choices(pool, weights=[kw.get(x, 1.5 if kw else 1) for x in pool])[0]
+        # 2026-11-07: 'cheapvs' (Cheap vs Expensive) yeni ana kurgu → kullanılmamış ürün kaldıkça %70
+        f = fmt or ('cheapvs' if rnd.random() < 0.7 else rnd.choices(pool, weights=[kw.get(x, 1.5 if kw else 1) for x in pool])[0])
         if f in RM.KURGU:
             key = RM.key_for(f, rnd, D or load_cached())
             if key is None: continue

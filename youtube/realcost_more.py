@@ -17,7 +17,7 @@ from PIL import ImageDraw
 import realcost as R
 from realcost import money, say, pmt, card_payoff, yrs, month_name, C
 
-KURGU = ['ratechange', 'mortgageyearago', 'ratebump', 'downpay', 'extra50', 'extramortgage', 'carbudget', 'homebudget',
+KURGU = ['cheapvs', 'ratechange', 'mortgageyearago', 'ratebump', 'downpay', 'extra50', 'extramortgage', 'carbudget', 'homebudget',
          'payoffgoal', 'perday', 'firstpayment', 'halfway', 'fourways', 'mattress', 'spendhours', 'spendshare', 'spendvs',
          'yearsofwork', 'mintimequiz', 'aprquiz', 'mortgagequiz', 'truefalse', 'higherlower', 'aprladder', 'termladder',
          'paymentladder', 'doubletime', 'halflife']
@@ -38,12 +38,24 @@ def bal_after(P, apr, n, k):
     return P * (1 + r) ** k - pay * ((1 + r) ** k - 1) / r
 
 
+# 2026-11-07 'cheapvs' (trend: "cheap vs expensive" Shorts medyan 826K, 36 kanal): ucuz vs pahalı, kullanım başı gerçek maliyet.
+# (ürün, birim, ucuz $, ucuz ömür, pahalı $, pahalı ömür) — TİPİK TAHMİNLER (yuvarlak), açıklamada belirtilir.
+CHEAPVS = [('Running Shoes', 'miles', 50, 300, 150, 500), ('Light Bulb', 'hours', 1, 1000, 5, 15000),
+           ('Mattress', 'years', 300, 5, 1500, 10), ('Winter Coat', 'years', 60, 2, 300, 10), ('Jeans', 'years', 25, 1, 120, 5),
+           ('Vacuum Cleaner', 'years', 80, 3, 500, 10), ('Blender', 'years', 30, 2, 400, 10), ('Office Chair', 'years', 100, 2, 800, 12),
+           ('Frying Pan', 'years', 20, 2, 150, 15), ('Kitchen Knife', 'years', 15, 2, 120, 15), ('Backpack', 'years', 25, 1, 150, 10),
+           ('Umbrella', 'years', 8, 1, 50, 5), ('Work Boots', 'years', 60, 1, 250, 5), ('Car Tire', 'miles', 100, 40000, 200, 70000),
+           ('Coffee Maker', 'years', 25, 2, 150, 8), ('Bed Sheets', 'years', 30, 2, 150, 8), ('Suitcase', 'years', 60, 3, 400, 15),
+           ('Bath Towels', 'years', 10, 2, 40, 8)]
+
+
 def key_for(k, rnd, D):
     pick = rnd.choice
     if k in ('ratechange',): return [k, pick(R.CARD_BAL)] if D['card'].get('year_ago') else None
     if k == 'mortgageyearago': return [k, pick(R.HOME_P)] if D['m30'].get('year_ago') else None
     if k in ('ratebump', 'downpay', 'extramortgage', 'firstpayment', 'halfway', 'yearsofwork'): return [k, pick(R.HOME_P)]
     if k in ('extra50', 'perday', 'paymentladder', 'mintimequiz'): return [k, pick(R.CARD_BAL)]
+    if k == 'cheapvs': return [k, rnd.randrange(len(CHEAPVS))]
     if k == 'carbudget': return [k, pick([300, 350, 400, 450, 500, 600, 700, 800])]
     if k == 'homebudget': return [k, pick([1500, 1800, 2000, 2200, 2500, 3000, 3500, 4000])]
     if k == 'payoffgoal': return [k, pick(R.CARD_BAL)]
@@ -62,7 +74,29 @@ def build(key, D, rnd):
     k = key[0]; B = []; facts = []; src = 'Rates: Federal Reserve G.19 / Freddie Mac via FRED'
     card, car, loan, m30, m15 = (D[x]['value'] for x in ('card', 'car', 'loan', 'm30', 'm15'))
     wage, sav, inf = D['wage']['value'], D['sav']['value'], D['cpi_yoy']['value']
-    if k == 'ratechange':
+    if k == 'cheapvs':
+        item, unit, cp, cl, ep, el = CHEAPVS[key[1]]
+        usd = lambda x: f'${x:,.0f}'
+        k1000 = unit == 'hours' or (unit == 'miles' and el >= 5000)          # küçük birimlerde 1.000 başına
+        per = ('1,000 ' + unit) if k1000 else ('mile' if unit == 'miles' else 'year')
+        cu, eu = (cp / cl * 1000, ep / el * 1000) if k1000 else (cp / cl, ep / el)
+        fmtu = lambda x: f'${x:,.2f}' if x < 10 else usd(x)
+        money = usd
+        o = [f'CHEAP {money(cp)}', f'PRICEY {money(ep)}']; win = 0 if cu < eu else 1
+        B = [(f'Cheap or expensive {item.lower()}: which one really costs less?', dict(t='tag', top='CHEAP vs EXPENSIVE', v=item.upper(), sub=f'{money(cp)} vs {money(ep)}')),
+             ('Pick one before the math.', dict(t='opts', o=o)),
+             (f'The cheap one is {money(cp)} and lasts about {cl:,} {unit}. The pricey one is {money(ep)} and lasts about {el:,} {unit}.',
+              dict(t='bars', rows=[('CHEAP LASTS', cl, 0, f'{cl:,} {unit.upper()}'), ('PRICEY LASTS', 0, el, f'{el:,} {unit.upper()}')], n=2)),
+             (f'Per {per}, the cheap one costs {fmtu(cu)} and the expensive one {fmtu(eu)}.',
+              dict(t='bars', rows=[(f'CHEAP PER {per.upper()}', cu, 0, fmtu(cu)), (f'PRICEY PER {per.upper()}', 0, eu, fmtu(eu))], n=2)),
+             (f'So the {"cheap" if win == 0 else "expensive"} one is the better deal' + (f', about {abs(cu - eu) / max(cu, eu) * 100:.0f} percent less per {per}.' if abs(cu - eu) > 1e-9 else '.'), dict(t='opts', o=o, r=win)),
+             ('Which one do you buy? Comment cheap or pricey.', dict(t='opts', o=o, r=win, cta='CHEAP OR PRICEY?'))]
+        title = f'Cheap vs Expensive {item}: {money(cp)} vs {money(ep)}, Cost per {per.title() if not k1000 else per}'
+        facts = [f'Cheap: about {money(cp)}, lasts about {cl:,} {unit}', f'Expensive: about {money(ep)}, lasts about {el:,} {unit}',
+                 'Prices and lifespans are typical rounded estimates; quality, brand and use change the result.']
+        if item == 'Light Bulb': facts.append('Purchase price only: an LED also uses far less electricity, which widens the gap.')
+        src = 'Estimates: typical retail prices and typical lifespans (rounded)'
+    elif k == 'ratechange':
         bal = key[1]; a0 = D['card']['year_ago']; m1, t1, f1 = card_payoff(bal, card); m0, t0, f0 = card_payoff(bal, a0)
         B = [(f'Credit card rates changed this year. Here is what that means for a {money(bal)} balance.', dict(t='tag', top='BALANCE', v=money(bal), sub=f'{money(bal)} CARD')),
              (f'A year ago the average card rate was {a0:.2f} percent. Today it is {card:.2f} percent, per the Federal Reserve.', dict(t='bars', rows=[('A YEAR AGO', a0, 0, f'{a0:.2f}%'), ('TODAY', 0, card, f'{card:.2f}%')], n=2, unit='%')),
