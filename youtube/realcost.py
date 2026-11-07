@@ -404,7 +404,7 @@ def build(key, D, rnd):
                  f'Per day: {money(a / 365)}, per month: {money(a / 12)}', f'10 years: {money(a * 10)}, 30 years: {money(a * 30)} (today\'s prices, no inflation)']
         src = f'Data: BLS Consumer Expenditure Survey ({c["year"]})'; cta = 'MORE OR LESS?'
     v.update(fmt=f, key=key, beats=beats, title=title[:95], src=src, cta=cta)
-    v['desc'] = (title + '\n\n' + '\n'.join(facts) + '\n\nRun your own numbers: https://debtlabai.com\n\n'
+    v['desc'] = (title + '\n\n' + '\n'.join(facts) + '\n\nRun your own numbers: https://debtlabai.com\nJob hunting? Write in your own language, get a resume for the US, UK, Germany or the Gulf: https://cvfennec.com (our tool, free preview)\n\n'
                  + src + '\n' + DISCLAIMER + '\n\n#Shorts #truecostmath #personalfinance #money')
     v['tags'] = ['true cost math', 'real cost', 'personal finance', 'money', f, 'shorts']
     return v
