@@ -432,7 +432,7 @@ def background():
     img = Image.new('RGB', (W, H), BG); d = ImageDraw.Draw(img)
     for y in range(0, H, 4):
         d.line([(0, y), (W, y)], fill=tuple(int(a + (b - a) * y / H) for a, b in zip(BG, BG2)))
-    d.text((W // 2, 150), 'T H E   R E A L   C O S T', font=font(MONT, 40), fill=ORANGE, anchor='mm')
+    d.text((W // 2, 150), 'T R U E   C O S T   M A T H', font=font(MONT, 40), fill=ORANGE, anchor='mm')   # 2026-11-07 marka
     return img
 
 
@@ -451,7 +451,9 @@ def price_tag(text_top, text_val, swing):
     d.polygon([(20, 20 + h // 2), (110, 20), (w + 20, 20), (w + 20, h + 20), (110, h + 20)], fill=TAG)
     d.ellipse([70, 20 + h // 2 - 18, 106, 20 + h // 2 + 18], fill=BG)
     d.text((w // 2 + 70, 95), text_top, font=font(MONT, 38), fill=GREY, anchor='mm')
-    d.text((w // 2 + 70, 205), text_val, font=font(ANTON, 130), fill=BG, anchor='mm')
+    fs = 130   # uzun değer etiketten taşmasın (ör. 'FRYING PAN')
+    while fs > 60 and d.textlength(text_val, font=font(ANTON, fs)) > w - 150: fs -= 6
+    d.text((w // 2 + 70, 205), text_val, font=font(ANTON, fs), fill=BG, anchor='mm')
     return t.rotate(swing, expand=True, resample=Image.BICUBIC)
 
 

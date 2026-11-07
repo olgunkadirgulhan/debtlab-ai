@@ -43,10 +43,16 @@ def bal_after(P, apr, n, k):
 CHEAPVS = [('Running Shoes', 'miles', 50, 300, 150, 500), ('Light Bulb', 'hours', 1, 1000, 5, 15000),
            ('Mattress', 'years', 300, 5, 1500, 10), ('Winter Coat', 'years', 60, 2, 300, 10), ('Jeans', 'years', 25, 1, 120, 5),
            ('Vacuum Cleaner', 'years', 80, 3, 500, 10), ('Blender', 'years', 30, 2, 400, 10), ('Office Chair', 'years', 100, 2, 800, 12),
-           ('Frying Pan', 'years', 20, 2, 150, 15), ('Kitchen Knife', 'years', 15, 2, 120, 15), ('Backpack', 'years', 25, 1, 150, 10),
+           ('Frying Pan', 'years', 25, 2, 150, 15), ('Kitchen Knife', 'years', 15, 2, 120, 15), ('Backpack', 'years', 25, 1, 150, 10),
            ('Umbrella', 'years', 8, 1, 50, 5), ('Work Boots', 'years', 60, 1, 250, 5), ('Car Tire', 'miles', 100, 40000, 200, 70000),
            ('Coffee Maker', 'years', 25, 2, 150, 8), ('Bed Sheets', 'years', 30, 2, 150, 8), ('Suitcase', 'years', 60, 3, 400, 15),
-           ('Bath Towels', 'years', 10, 2, 40, 8)]
+           ('Bath Towels', 'years', 10, 2, 40, 8),
+           ('Laptop', 'years', 400, 3, 1200, 6), ('Smartphone', 'years', 200, 2, 900, 4), ('Headphones', 'years', 20, 1, 200, 5),
+           ('Wallet', 'years', 15, 1, 80, 8), ('Leather Belt', 'years', 10, 1, 60, 10), ('Rain Boots', 'years', 25, 2, 120, 8),
+           ('Toaster', 'years', 20, 3, 150, 10), ('Air Fryer', 'years', 50, 2, 250, 7), ('Microwave', 'years', 70, 5, 300, 10),
+           ('Washing Machine', 'years', 400, 8, 1100, 14), ('Pillow', 'years', 15, 1, 80, 3), ('Hair Dryer', 'years', 20, 2, 150, 7),
+           ('Water Bottle', 'years', 8, 1, 40, 8), ('Wireless Mouse', 'years', 15, 2, 80, 5), ('Car Battery', 'years', 100, 3, 250, 6),
+           ('Desk Lamp', 'years', 15, 2, 80, 10)]
 
 
 def key_for(k, rnd, D):
@@ -83,13 +89,16 @@ def build(key, D, rnd):
         fmtu = lambda x: f'${x:,.2f}' if x < 10 else usd(x)
         money = usd
         o = [f'CHEAP {money(cp)}', f'PRICEY {money(ep)}']; win = 0 if cu < eu else 1
+        tie = abs(cu - eu) / max(cu, eu) < 0.05
         B = [(f'Cheap or expensive {item.lower()}: which one really costs less?', dict(t='tag', top='CHEAP vs EXPENSIVE', v=item.upper(), sub=f'{money(cp)} vs {money(ep)}')),
              ('Pick one before the math.', dict(t='opts', o=o)),
              (f'The cheap one is {money(cp)} and lasts about {cl:,} {unit}. The pricey one is {money(ep)} and lasts about {el:,} {unit}.',
               dict(t='bars', rows=[('CHEAP LASTS', cl, 0, f'{cl:,} {unit.upper()}'), ('PRICEY LASTS', 0, el, f'{el:,} {unit.upper()}')], n=2)),
              (f'Per {per}, the cheap one costs {fmtu(cu)} and the expensive one {fmtu(eu)}.',
               dict(t='bars', rows=[(f'CHEAP PER {per.upper()}', cu, 0, fmtu(cu)), (f'PRICEY PER {per.upper()}', 0, eu, fmtu(eu))], n=2)),
-             (f'So the {"cheap" if win == 0 else "expensive"} one is the better deal' + (f', about {abs(cu - eu) / max(cu, eu) * 100:.0f} percent less per {per}.' if abs(cu - eu) > 1e-9 else '.'), dict(t='opts', o=o, r=win)),
+             ((f'Almost a tie per {per}, so it comes down to quality and how much you use it.' if tie else
+               f'So the {"cheap" if win == 0 else "expensive"} one is the better deal, about {abs(cu - eu) / max(cu, eu) * 100:.0f} percent less per {per}.'),
+              dict(t='opts', o=o) if tie else dict(t='opts', o=o, r=win)),
              ('Which one do you buy? Comment cheap or pricey.', dict(t='opts', o=o, r=win, cta='CHEAP OR PRICEY?'))]
         title = f'Cheap vs Expensive {item}: {money(cp)} vs {money(ep)}, Cost per {per.title() if not k1000 else per}'
         facts = [f'Cheap: about {money(cp)}, lasts about {cl:,} {unit}', f'Expensive: about {money(ep)}, lasts about {el:,} {unit}',
