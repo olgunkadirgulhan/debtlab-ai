@@ -124,3 +124,4 @@ rc:downpay:250000,2026-11-04 22:01,-OzMRSOi9fY,public,real_cost_downpay,"$250,00
 rc:fourways:15000,2026-11-05 16:25,F3ogQV-kbZ8,public,real_cost_fourways,"The Same $15,000 at 4 Different Rates: Real Cost",realcost
 rc:doubletime:1000,2026-11-06 19:24,DQRgraQjEag,public,real_cost_doubletime,"How Long Until $1,000 Doubles in an Average Savings Account?",realcost
 rc:cheapvs:20,2026-11-07 19:24,JsnHlBrTVIY,public,real_cost_cheapvs,"Cheap vs Expensive Headphones: $20 vs $200, Cost per Year",realcost
+rc:cheapvs:1,2026-11-08 19:24,yre4vvYNW_I,public,real_cost_cheapvs,"Cheap vs Expensive Light Bulb: $1 vs $5, Cost per 1,000 hours",realcost
