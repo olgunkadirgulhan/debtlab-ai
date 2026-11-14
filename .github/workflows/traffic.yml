@@ -1,0 +1,17 @@
+name: traffic
+# Sadece okuma: debtlabai.com son 30 günün günlük istek/ziyaretçi sayıları (Cloudflare GraphQL). Anahtar yazdırılmaz.
+on: workflow_dispatch
+jobs:
+  t:
+    runs-on: ubuntu-24.04
+    steps:
+      - env:
+          T: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          Z=$(curl -s "https://api.cloudflare.com/client/v4/zones?name=debtlabai.com" -H "Authorization: Bearer $T" | jq -r '.result[0].id // empty')
+          echo "zone bulundu: $([ -n "$Z" ] && echo evet || echo hayir)"
+          [ -z "$Z" ] && exit 0
+          SINCE=$(date -u -d '30 days ago' +%F); UNTIL=$(date -u +%F)
+          Q='{"query":"{viewer{zones(filter:{zoneTag:\"'$Z'\"}){httpRequests1dGroups(limit:31,filter:{date_geq:\"'$SINCE'\",date_leq:\"'$UNTIL'\"},orderBy:[date_ASC]){dimensions{date} sum{requests pageViews} uniq{uniques}}}}}"}'
+          curl -s https://api.cloudflare.com/client/v4/graphql -H "Authorization: Bearer $T" -H "Content-Type: application/json" -d "$Q" \
+            | jq -r '.errors // empty, (.data.viewer.zones[0].httpRequests1dGroups[]? | "\(.dimensions.date) istek=\(.sum.requests) sayfa=\(.sum.pageViews) tekil=\(.uniq.uniques)")'
