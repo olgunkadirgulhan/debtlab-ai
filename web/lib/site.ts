@@ -49,6 +49,27 @@ export const CALCULATORS = [
     icon: "card",
   },
   {
+    href: "/calculators/balance-transfer/",
+    title: "Balance Transfer Calculator",
+    short: "Balance Transfer",
+    blurb: "Is a 0% APR card worth the fee? Compare both paths.",
+    icon: "card",
+  },
+  {
+    href: "/calculators/debt-consolidation/",
+    title: "Debt Consolidation Calculator",
+    short: "Consolidation",
+    blurb: "See if one personal loan beats your current payments.",
+    icon: "shield",
+  },
+  {
+    href: "/calculators/debt-to-income/",
+    title: "Debt-to-Income Ratio Calculator",
+    short: "Debt-to-Income",
+    blurb: "Your DTI and how much to pay down to get under 43% or 36%.",
+    icon: "gauge",
+  },
+  {
     href: "/payoff/",
     title: "Credit Card Payoff Tables",
     short: "Payoff Tables",
