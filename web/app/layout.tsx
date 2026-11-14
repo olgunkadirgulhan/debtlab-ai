@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   title: { default: `${SITE_NAME}: Free Debt Payoff Calculators`, template: `%s | ${SITE_NAME}` },
   description:
     "Free debt snowball, debt avalanche and credit card payoff calculators. See your debt-free date and how much interest you could save.",
-  openGraph: { siteName: SITE_NAME, type: "website", locale: "en_US" },
-  twitter: { card: "summary_large_image" },
+  openGraph: { siteName: SITE_NAME, type: "website", locale: "en_US", images: [{ url: "/og.png", width: 1200, height: 630, alt: "DebtLab: free debt payoff calculators" }] },
+  twitter: { card: "summary_large_image", images: ["/og.png"] },
   alternates: { canonical: "/" },
   ...(GSC_TOKEN && { verification: { google: GSC_TOKEN } }),
 };
