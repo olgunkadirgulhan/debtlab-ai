@@ -17,6 +17,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", images: ["/og.png"] },
   alternates: { canonical: "/" },
   ...(GSC_TOKEN && { verification: { google: GSC_TOKEN } }),
+  other: { "p:domain_verify": "be2ac50eebe5a67af1319c7f3896ae20" },   // Pinterest site claim
 };
 
 const ADSENSE = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
