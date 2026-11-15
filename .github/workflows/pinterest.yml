@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # start deploy-site after new pins
 
 concurrency:
   group: repo-writes
@@ -23,7 +24,11 @@ jobs:
       - run: pip install requests pillow reportlab pymupdf
       - name: Build free PDF (pin images use its pages)
         run: python tools/planner/make_planner.py
-      - name: Post pins
+      - name: Release pins to RSS feed (Pinterest auto-publish reads /pins.xml)
+        env:
+          PINS_PER_RUN: ${{ vars.PINS_PER_RUN }}
+        run: python tools/pinterest/feed.py
+      - name: Post pins (API, only if credentials exist)
         env:
           PINTEREST_APP_ID: ${{ secrets.PINTEREST_APP_ID }}
           PINTEREST_APP_SECRET: ${{ secrets.PINTEREST_APP_SECRET }}
@@ -35,8 +40,11 @@ jobs:
         run: |
           git config user.name "debtlab-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add tools/pinterest/posted.csv 2>/dev/null || true
+          git add tools/pinterest/posted.csv tools/pinterest/feed.csv web/public/pins web/public/pins.xml 2>/dev/null || true
           git diff --cached --quiet && exit 0
           git commit -m "pins: $(date -u +%F)"
           git pull --rebase
           git push
+          gh workflow run deploy.yml --ref main
+        env:
+          GH_TOKEN: ${{ github.token }}
