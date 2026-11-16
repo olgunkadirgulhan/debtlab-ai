@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import LegalPage from "@/components/LegalPage";
 import { OPERATOR } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Privacy Policy", alternates: { canonical: "/privacy/" } };
+export const metadata: Metadata = { title: "Privacy Policy", description: "How DebtLab handles your data: calculators run in your browser, what cookies and Google AdSense ads use, and how to opt out of personalized ads.", alternates: { canonical: "/privacy/" } };
 
 export default function Page() {
   return (

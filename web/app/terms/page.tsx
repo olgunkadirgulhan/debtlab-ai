@@ -3,7 +3,7 @@ import Link from "next/link";
 import LegalPage from "@/components/LegalPage";
 import { OPERATOR } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Terms of Use", alternates: { canonical: "/terms/" } };
+export const metadata: Metadata = { title: "Terms of Use", description: "The terms for using DebtLab: free educational debt calculators and guides, no financial advice, acceptable use and limits of liability.", alternates: { canonical: "/terms/" } };
 
 export default function Page() {
   return (

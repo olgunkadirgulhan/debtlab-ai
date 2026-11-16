@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import LegalPage from "@/components/LegalPage";
 import { AFFILIATE_NOTE, DISCLAIMER } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Disclaimer", alternates: { canonical: "/disclaimer/" } };
+export const metadata: Metadata = { title: "Disclaimer", description: "DebtLab is educational only: calculator results are estimates based on your inputs, not financial, legal or credit advice. Affiliate links are disclosed.", alternates: { canonical: "/disclaimer/" } };
 
 export default function Page() {
   return (
