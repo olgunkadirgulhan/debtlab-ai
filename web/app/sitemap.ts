@@ -14,6 +14,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/free-debt-payoff-planner/`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/blog/`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
     ...allPosts().map((p) => ({ url: `${SITE_URL}/blog/${p.slug}/`, lastModified: new Date(p.date), changeFrequency: "monthly" as const, priority: 0.7 })),
-    ...["about", "privacy", "terms", "disclaimer"].map((p) => ({ url: `${SITE_URL}/${p}/`, changeFrequency: "yearly" as const, priority: 0.3 })),
+    ...["about", "contact", "privacy", "terms", "disclaimer"].map((p) => ({ url: `${SITE_URL}/${p}/`, changeFrequency: "yearly" as const, priority: 0.3 })),
   ];
 }

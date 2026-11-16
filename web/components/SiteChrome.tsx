@@ -66,6 +66,7 @@ export function SiteFooter() {
             <li><Link href="/free-debt-payoff-planner/" className="hover:text-brand">Free printable tracker</Link></li>
             <li><Link href="/blog/" className="hover:text-brand">Blog</Link></li>
             <li><Link href="/about/" className="hover:text-brand">About</Link></li>
+            <li><Link href="/contact/" className="hover:text-brand">Contact</Link></li>
             {LINKS.youtube_channel && (
               <li><a href={LINKS.youtube_channel} className="hover:text-brand" rel="noopener">YouTube</a></li>
             )}
